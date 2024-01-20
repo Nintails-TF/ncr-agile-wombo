@@ -1,8 +1,8 @@
 # ncr-agile-wombo
 
 ## To Do:
-- [ ] Agree on a common coding standard OR use some kind of automatic tool to standardize code.
-- [ ] Set up branches and proper version control
+- [ ] Agree on a common coding standard OR setting up some kind of automatic tool to standardize code.
+- [ ] Agreeing on branches and proper version control
   - [ ] Main, Release, Develop, Feature branches?
     - Main - Our Live deployment - making sure to keep this protected until we are 100% ready.
     - Release - Our final version of develop, final testing before new code is live.
