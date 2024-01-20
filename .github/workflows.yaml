@@ -1,0 +1,28 @@
+name: MERN CI/CD Workflow
+
+on:
+  push:
+    branches: [ dev, FE/**, BE/**, API/** ]
+  pull_request:
+    branches: [ dev, FE/**, BE/**, API/** ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Tests
+      run: npm test
+
+    - name: Build
+      run: npm run build
