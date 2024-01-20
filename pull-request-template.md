@@ -1,6 +1,8 @@
 ---
-name:Pull Request Template
-about: Decsribe the the PR here
+name: Pull Request Template
+title: '[FEATURE/TASK]: Brief Description'
+labels: 
+assignees: 
 ---
 
 ## Pull Request Overview
