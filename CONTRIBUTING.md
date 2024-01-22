@@ -1,7 +1,7 @@
-# Contributing to [Project Name]
+# Contributing to ncr-agile-wombo
 
 ## Introduction
-Thank you for considering contributing to [Project Name]. This document outlines the process for contributions.
+Thank you for considering contributing to ncr-agile-wombo. This document outlines the process for contributions.
 
 ## How to Contribute
 - Clone the repository. Branches should be [dev, FE/, BE/, API/] in order to be recognised by the workflow automation. E.g.: FE/login-page or BE/updating-databse.
