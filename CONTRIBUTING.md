@@ -10,7 +10,7 @@ Thank you for considering contributing to [Project Name]. This document outlines
 
 ## Pull Requests
 - Fill out the provided PR template with all required details.
-- Link the PR to an issue.
+- Link the PR to an issue (including hashtag).
 - PR must be reviewed and merged by a teammate.
 
 ## Reporting Bugs
