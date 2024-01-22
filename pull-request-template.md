@@ -1,8 +1,5 @@
 ---
-name: Pull Request Template
-title: '[FEATURE/TASK]: Brief Description'
-labels: 
-assignees: 
+name: TITLE HERE
 ---
 
 ## Pull Request Overview
