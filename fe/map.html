@@ -3,6 +3,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 </head>
 
@@ -23,7 +26,13 @@
 <body>
     <div class="container my-16">
         <h1>LeafletJS Map</h1>
-        <div id="map"></div>
+        <div id="map">
+            <div id="map-loader" class="grid justify-center">
+                <h4 class="font-medium">Please enable location services...</h4>
+                <div class="loader mx-auto mt-4"></div>
+            </div>
+      
+        </div>
     </div>
     <label for="map-search" class="mb-2 text-sm font-medium text-sm font-medium text-gray-900 sr-only dark:text-white">search bar </label>
     <div class="relative">
@@ -38,13 +47,26 @@
 </body>
 
 <script>
-    try {
-        // initialise map
-        var map = L.map('map').setView([56.461590, -2.971243], 17);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
-    } catch {
-        // display error if unable to load map
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            try {
+                // initialise map
+                var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 15);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+
+                // hide loading screen
+                var mapLoader = document.getElementById('map-loader');
+                mapLoader.classList.add('hidden');
+                mapLoader.classList.remove('grid');
+            } catch {
+                // display error if unable to load map
+                var map = document.getElementById('map');
+                map.innerHTML = '<p>There was an error loading the map</p>';
+            }
+        })
+    } else {
         var map = document.getElementById('map');
-        map.innerHTML = '<p>There was an error loading the map</p>';
+        map.innerHTML = '<p class="grid justify-center">Geolocation is unavailable for your browser</p>';
     }
+
 </script>
