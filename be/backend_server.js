@@ -10,5 +10,5 @@ mongoose.connect("mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.ne
 // Basic Route
 app.get('/', (req, res) => res.send('Hello World!'));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
