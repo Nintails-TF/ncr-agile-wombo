@@ -21,8 +21,9 @@ db.once("open", () => {
   console.log("Connected to the database");
 });
 
-// ATM ENDPOINTS
+const ObjectId = require('mongodb').ObjectId;
 
+// ATM ENDPOINTS
 // GET all ATMs
 app.get("/api/atms", async (req, res) => {
   try {
@@ -34,18 +35,50 @@ app.get("/api/atms", async (req, res) => {
   }
 });
 
-// GET ATM by id
+// GET ATM by _id
 app.get("/api/atms/:id", async (req, res) => {
-  try {
-    const atm = await db
-      .collection("ATMs")
-      .findOne({ Identification: req.params.id });
-    console.log(atm);
-    res.json(atm);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ _id: new ObjectId(req.params.id) });
+        console.log(atm);
+        res.json(atm);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
+
+// UPDATE an ATM by _id
+app.put("/api/atms/:id", async (req, res) => {
+    try {
+        const updatedAtm = await db.collection("ATMs")
+            .findOneAndUpdate(
+                { _id: new ObjectId(req.params.id) },
+                { $set: req.body },
+                { returnDocument: 'after' }
+            );
+        console.log(updatedAtm);
+        res.json(updatedAtm);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// DELETE an ATM by _id
+app.delete("/api/atms/:id", async (req, res) => {
+    try {
+        const deletedAtm = await db.collection("ATMs")
+            .deleteOne({ _id: new ObjectId(req.params.id) });
+        if (deletedAtm.deletedCount === 0) {
+            return res.status(404).json({ message: "ATM not found" });
+        }
+        console.log(deletedAtm);
+        res.status(204).json();
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 // BRANCH ENDPOINTS
 
