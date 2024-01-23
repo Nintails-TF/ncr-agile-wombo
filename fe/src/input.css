@@ -2,16 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600;700&display=swap');
-
 body {
     @apply font-sans;
 }
 
-h1 {
+h1.title {
     @apply text-4xl font-semibold;
 }
 
 #map {
     @apply h-[700px] mt-8;
+}
+
+.loader {
+    @apply block border-[16px] border-[#F3F3F3] border-t-[16px] border-t-[#808080] rounded-full w-32 h-32;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
