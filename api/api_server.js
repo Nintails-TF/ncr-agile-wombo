@@ -77,6 +77,29 @@ app.delete("/api/atms/:id", async (req, res) => {
     }
 });
 
+// POST a new ATM
+app.post("/api/atms", async (req, res) => {
+    try {
+        const newAtm = await db.collection("ATMs").insertOne(req.body);
+        console.log(newAtm);
+        res.status(201).json(newAtm);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// GET ATMs with search functionality
+app.get("/api/atms/search", async (req, res) => {
+    try {
+        const query = {}; // Construct query based on req.query parameters
+        // Example: if (req.query.location) query['Location.TownName'] = req.query.location;
+        const atms = await db.collection("ATMs").find(query).toArray();
+        res.json(atms);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 // BRANCH ENDPOINTS
 
