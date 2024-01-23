@@ -12,6 +12,13 @@
 </body>
 
 <script>
-    var map = L.map('map').setView([56.461590, -2.971243], 17);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    try {
+        // initialise map
+        var map = L.map('map').setView([56.461590, -2.971243], 17);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    } catch {
+        // display error if unable to load map
+        var map = document.getElementById('map');
+        map.innerHTML = '<p>There was an error loading the map</p>';
+    }
 </script>
