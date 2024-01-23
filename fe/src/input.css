@@ -6,7 +6,7 @@ body {
     @apply font-sans;
 }
 
-h1 {
+h1.title {
     @apply text-4xl font-semibold;
 }
 
