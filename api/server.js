@@ -1,11 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const app = express();
 const port = 3000;
+
+// I'm confused what this bit is for?
+const { MongoClient, ServerApiVersion } = require("mongodb");
+
+// MongoDB URI
+const uri = "mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.net/?retryWrites=true&w=majority";
+
+// Middleware
 app.use(express.json());
-const uri =
-  "mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.net/?retryWrites=true&w=majority";
+
 
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
