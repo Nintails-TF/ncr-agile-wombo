@@ -21,26 +21,24 @@ db.once("open", () => {
   console.log("Connected to the database");
 });
 
-const ObjectId = require('mongodb').ObjectId;
-
 // ATM ENDPOINTS
 // GET all ATMs
 app.get("/api/atms", async (req, res) => {
-  try {
-    const atms = await db.collection("ATMs").find({}).toArray();
-    console.log(atms);
-    res.json(atms);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const atms = await db.collection("ATMs").find({}).toArray();
+        console.log(atms);
+        res.json(atms);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
-// GET ATM by _id
+// GET ATM by Identification
 app.get("/api/atms/:id", async (req, res) => {
     try {
         const atm = await db
             .collection("ATMs")
-            .findOne({ _id: new ObjectId(req.params.id) });
+            .findOne({ Identification: req.params.id });
         console.log(atm);
         res.json(atm);
     } catch (error) {
@@ -48,12 +46,12 @@ app.get("/api/atms/:id", async (req, res) => {
     }
 });
 
-// UPDATE an ATM by _id
+// UPDATE an ATM by Identification
 app.put("/api/atms/:id", async (req, res) => {
     try {
         const updatedAtm = await db.collection("ATMs")
             .findOneAndUpdate(
-                { _id: new ObjectId(req.params.id) },
+                { Identification: req.params.id },
                 { $set: req.body },
                 { returnDocument: 'after' }
             );
@@ -64,11 +62,11 @@ app.put("/api/atms/:id", async (req, res) => {
     }
 });
 
-// DELETE an ATM by _id
+// DELETE an ATM by Identification
 app.delete("/api/atms/:id", async (req, res) => {
     try {
         const deletedAtm = await db.collection("ATMs")
-            .deleteOne({ _id: new ObjectId(req.params.id) });
+            .deleteOne({ Identification: req.params.id });
         if (deletedAtm.deletedCount === 0) {
             return res.status(404).json({ message: "ATM not found" });
         }
@@ -84,26 +82,26 @@ app.delete("/api/atms/:id", async (req, res) => {
 
 // GET all branches
 app.get("/api/branches", async (req, res) => {
-  try {
-    const branches = await db.collection("Branches").find({}).toArray();
-    console.log(branches);
-    res.json(branches);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const branches = await db.collection("Branches").find({}).toArray();
+        console.log(branches);
+        res.json(branches);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
-// GET branch by id
+// GET branch by Identification
 app.get("/api/branches/:id", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne({ Identification: req.params.id });
-    console.log(branch);
-    res.json(branch);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const branch = await db
+            .collection("Branches")
+            .findOne({ Identification: req.params.id });
+        console.log(branch);
+        res.json(branch);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Listen on the specified port
