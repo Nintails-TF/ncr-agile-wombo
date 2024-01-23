@@ -34,6 +34,19 @@ app.get("/api/atms", async (req, res) => {
   }
 });
 
+// GET ATM by id
+app.get("/api/atms/:id", async (req, res) => {
+  try {
+    const atm = await db
+      .collection("ATMs")
+      .findOne({ Identification: req.params.id });
+    console.log(atm);
+    res.json(atm);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // BRANCH ENDPOINTS
 
 // GET all branches
@@ -42,6 +55,19 @@ app.get("/api/branches", async (req, res) => {
     const branches = await db.collection("Branches").find({}).toArray();
     console.log(branches);
     res.json(branches);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET branch by id
+app.get("/api/branches/:id", async (req, res) => {
+  try {
+    const branch = await db
+      .collection("Branches")
+      .findOne({ Identification: req.params.id });
+    console.log(branch);
+    res.json(branch);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
