@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600;700&display=swap');
+
+body {
+    @apply font-sans;
+}
+
+h1 {
+    @apply text-4xl font-semibold;
+}
+
+#map {
+    @apply h-[700px] mt-8;
+}
