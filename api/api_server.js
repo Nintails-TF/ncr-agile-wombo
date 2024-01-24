@@ -124,11 +124,51 @@ app.get("/api/branches/:id", async (req, res) => {
 });
 
 // UPDATE FUNCTIONS
+// UPDATE a Branch by Identification
+app.put("/api/branches/:id", async (req, res) => {
+  try {
+    const updatedBranch = await db
+      .collection("Branches")
+      .findOneAndUpdate(
+        { Identification: req.params.id },
+        { $set: req.body },
+        { returnDocument: "after" }
+      );
+    console.log(updatedBranch);
+    res.json(updatedBranch);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // DELETE FUNCTIONS
+// DELETE a Branch by Identification
+app.delete("/api/branches/:id", async (req, res) => {
+  try {
+    const deletedBranch = await db
+      .collection("Branches")
+      .deleteOne({ Identification: req.params.id });
+    if (deletedBranch.deletedCount === 0) {
+      return res.status(404).json({ message: "Branch not found" });
+    }
+    console.log(deletedBranch);
+    res.status(204).json();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // POST FUNCTIONS
-
+// POST a new Branch
+app.post("/api/branches", async (req, res) => {
+  try {
+    const newBranch = await db.collection("Branches").insertOne(req.body);
+    console.log(newBranch);
+    res.status(201).json(newBranch);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Root endpoint
 app.get("/", (req, res) => {
