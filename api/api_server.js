@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const port = 3000;
 
 // MongoDB URI
 const uri =
@@ -283,5 +282,11 @@ app.get("/api/branches/:id/sequence_number", async (req, res) => {
   }
 });
 
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 // Listen on the specified port
-app.listen(port, () => console.log(`API server listening on port ${port}!`));
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => console.log(`API server listening on port ${PORT}!`));
