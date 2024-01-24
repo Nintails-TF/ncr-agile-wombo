@@ -208,5 +208,80 @@ app.get("/api/branches/:id/contact_info", async (req, res) => {
   }
 });
 
+// GET Branch Availability by Identification
+app.get("/api/branches/:id/availability", async (req, res) => {
+  try {
+    const branch = await db
+      .collection("Branches")
+      .findOne(
+        { Identification: req.params.id },
+        { projection: { Availability: 1 } }
+      );
+    res.json(branch.Availability || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET Branch CustomerSegment by Identification
+app.get("/api/branches/:id/customer_segment", async (req, res) => {
+  try {
+    const branch = await db
+      .collection("Branches")
+      .findOne(
+        { Identification: req.params.id },
+        { projection: { CustomerSegment: 1 } }
+      );
+    res.json(branch.CustomerSegment || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET Branch Type by Identification
+app.get("/api/branches/:id/type", async (req, res) => {
+  try {
+    const branch = await db
+      .collection("Branches")
+      .findOne(
+        { Identification: req.params.id },
+        { projection: { Type: 1 } }
+      );
+    res.json(branch.Type || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET Branch Name by Identification
+app.get("/api/branches/:id/name", async (req, res) => {
+  try {
+    const branch = await db
+      .collection("Branches")
+      .findOne(
+        { Identification: req.params.id },
+        { projection: { Name: 1 } }
+      );
+    res.json(branch.Name || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET Branch SequenceNumber by Identification
+app.get("/api/branches/:id/sequence_number", async (req, res) => {
+  try {
+    const branch = await db
+      .collection("Branches")
+      .findOne(
+        { Identification: req.params.id },
+        { projection: { SequenceNumber: 1 } }
+      );
+    res.json(branch.SequenceNumber || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Listen on the specified port
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
