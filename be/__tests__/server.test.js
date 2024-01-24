@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('./server'); // Export your express app from server.js
+const app = require('../server'); 
 
 describe('GET /', () => {
   it('responds with Hello World!', async () => {
