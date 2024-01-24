@@ -47,33 +47,6 @@ app.get("/api/atms/:id", async (req, res) => {
   }
 });
 
-// GET ATM services by Identification
-app.get("/api/atms/:id/services", async (req, res) => {
-  try {
-    const atm = await db
-      .collection("ATMs")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { ATMServices: 1 } }
-      );
-    res.json(atm.ATMServices || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET ATMs with search functionality
-app.get("/api/atms/search", async (req, res) => {
-  try {
-    const query = {}; // Construct query based on req.query parameters
-    // Example: if (req.query.location) query['Location.TownName'] = req.query.location;
-    const atms = await db.collection("ATMs").find(query).toArray();
-    res.json(atms);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // UPDATE FUNCTIONS
 // UPDATE an ATM by Identification
 app.put("/api/atms/:id", async (req, res) => {
@@ -92,6 +65,7 @@ app.put("/api/atms/:id", async (req, res) => {
   }
 });
 
+
 // DELETE FUNCTIONS
 // DELETE an ATM by Identification
 app.delete("/api/atms/:id", async (req, res) => {
@@ -108,6 +82,7 @@ app.delete("/api/atms/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // POST FUNCTIONS
 // POST a new ATM
