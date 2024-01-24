@@ -72,6 +72,118 @@ app.get("/api/atms/search", async (req, res) => {
     }
 });
 
+// GET Supported langs by Identification
+app.get("/api/atms/:id/supported-languages", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { SupportedLanguages: 1 } });
+        res.json(atm.SupportedLanguages || []);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/accessibility", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { Accessibility: 1 } });
+        res.json(atm.Accessibility || []);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/supported-currencies", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { SupportedCurrencies: 1 } });
+        res.json(atm.SupportedCurrencies || []);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+app.get("/api/atms/:id/access-24hr", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { Access24HoursIndicator: 1 } });
+        res.json({ Access24HoursIndicator: atm.Access24HoursIndicator || false });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/min-amount", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { MinimumPossibleAmount: 1 } });
+        res.json({ MinimumPossibleAmount: atm.MinimumPossibleAmount || "0" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/note", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { Note: 1 } });
+        res.json(atm.Note || []);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/other-accessibility", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { OtherAccessibility: 1 } });
+        res.json(atm.OtherAccessibility || []);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/branch", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { Branch: 1 } });
+        res.json(atm.Branch || {});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/location", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { Location: 1 } });
+        res.json(atm.Location || {});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/api/atms/:id/geolocation", async (req, res) => {
+    try {
+        const atm = await db
+            .collection("ATMs")
+            .findOne({ Identification: req.params.id }, { projection: { "Location.PostalAddress.GeoLocation.GeographicCoordinates": 1 } });
+        res.json(atm.Location?.PostalAddress?.GeoLocation?.GeographicCoordinates || {});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 
 // UPDATE FUNCTIONS
