@@ -11,7 +11,7 @@ h1.title {
 }
 
 #map {
-    @apply h-[700px] mt-8;
+    height: calc(100vh - 54px)
 }
 
 .loader {
@@ -22,4 +22,36 @@ h1.title {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.slider {
+    @apply w-48 h-5 rounded-xl bg-[#D3D3D3] outline-none;
+    -webkit-appearance: none;
+    -webkit-transition: .2s;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    @apply w-8 h-8 rounded-full bg-red-400;
+}
+.slider::-moz-range-thumb {
+    @apply w-8 h-8 rounded-full bg-red-400;
+}
+
+#filter-btn path {
+    fill: #808080;
+    @apply transition duration-200;
+}
+#filter-btn:hover path {
+    fill: #4D4D4D;
+}
+
+#filter-box {
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(-100%);
+}
+#filter-box.visible {
+    transform: translateY(0);
 }
