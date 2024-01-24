@@ -4,11 +4,11 @@ const app = express();
 
 // Connect to MongoDB
 mongoose.connect(
-  "mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.net/?retryWrites=true&w=majority", 
-  { useNewUrlParser: true, useUnifiedTopology: true }
+  "mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.net/?retryWrites=true&w=majority"
 )
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.log(err));
+
 
 // Basic Route
 app.get('/', (req, res) => res.send('Hello World!'));
