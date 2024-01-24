@@ -47,7 +47,6 @@ app.get("/api/atms/:id", async (req, res) => {
   }
 });
 
-
 // UPDATE FUNCTIONS
 // UPDATE an ATM by Identification
 app.put("/api/atms/:id", async (req, res) => {
@@ -66,6 +65,7 @@ app.put("/api/atms/:id", async (req, res) => {
   }
 });
 
+
 // DELETE FUNCTIONS
 // DELETE an ATM by Identification
 app.delete("/api/atms/:id", async (req, res) => {
@@ -82,6 +82,7 @@ app.delete("/api/atms/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // POST FUNCTIONS
 // POST a new ATM
