@@ -3,6 +3,13 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const db = mongoose.connection;
 
+// Error handling function
+function handleError(res, error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+}
+
+
 // BRANCH ENDPOINTS
 
 // GET all Branches
@@ -12,7 +19,7 @@ router.get("/api/branches", async (req, res) => {
         console.log(branches);
         res.json(branches);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -25,7 +32,7 @@ router.get("/api/branches/:id", async (req, res) => {
         console.log(branch);
         res.json(branch);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -42,7 +49,7 @@ router.put("/api/branches/:id", async (req, res) => {
         console.log(updatedBranch);
         res.json(updatedBranch);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -58,7 +65,7 @@ router.delete("/api/branches/:id", async (req, res) => {
         console.log(deletedBranch);
         res.status(204).json();
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -69,7 +76,7 @@ router.post("/api/branches", async (req, res) => {
         console.log(newBranch);
         res.status(201).json(newBranch);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 

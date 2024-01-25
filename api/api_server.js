@@ -1,37 +1,33 @@
-require('dotenv').config(); 
-
+require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
-const atmRoutes = require('./atmRoutes'); // Import ATM routes
-const branchRoutes = require('./branchRoutes'); // Import Branch routes
+const connectDB = require('./database'); // Import the database connection function
+const atmRoutes = require('./atmRoutes');
+const branchRoutes = require('./branchRoutes');
 const app = express();
 
-// MongoDB URI
-const uri = process.env.MONGO_URI;
-
-// Middleware
 app.use(express.json());
 
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+connectDB(); // Connect to the database
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "Connection error:"));
-db.once("open", () => {
-  console.log("Connected to the database");
-});
-
-// Use the imported routes
 app.use(atmRoutes);
 app.use(branchRoutes);
 
-// Root endpoint
+// Root Endpoint
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+    res.send("Hello World!");
 });
 
-// Use the PORT environment variable
+// 404 Error Handler (for any unhandled routes)
+app.use((req, res, next) => {
+    res.status(404).send("Resource not found");
+});
+
+// Generic Error Handler
+app.use((error, req, res, next) => {
+    console.error(error.stack);
+    res.status(500).send('Something broke!');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`API server listening on port ${PORT}!`));
+
