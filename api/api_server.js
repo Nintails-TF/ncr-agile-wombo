@@ -1,3 +1,5 @@
+require('dotenv').config(); 
+
 const express = require('express');
 const mongoose = require('mongoose');
 const atmRoutes = require('./atmRoutes'); // Import ATM routes
@@ -5,8 +7,7 @@ const branchRoutes = require('./branchRoutes'); // Import Branch routes
 const app = express();
 
 // MongoDB URI
-const uri =
-  "mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.net/NCR";
+const uri = process.env.MONGO_URI;
 
 // Middleware
 app.use(express.json());
@@ -31,6 +32,6 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// Listen on the specified port
-const PORT = process.env.PORT || 3000
+// Use the PORT environment variable
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`API server listening on port ${PORT}!`));
