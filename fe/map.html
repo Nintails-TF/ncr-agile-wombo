@@ -554,15 +554,6 @@
   </div>
 
   <script>
-    fetch("http://localhost:3000/list-view-data")
-      .then((response) => response.json())
-      .then((data) => {
-        // data now contains the array of ATMs and branches
-        // Implement your function to populate the list view with this data
-        console.log(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         try {
@@ -581,12 +572,29 @@
           var mapLoader = document.getElementById("map-loader");
           mapLoader.classList.add("hidden");
           mapLoader.classList.remove("grid");
-          var marker = L.marker([
-            position.coords.latitude,
-            position.coords.longitude,
-          ]).addTo(map);
+          
+          
+          
+          fetch("http://localhost:3000/list-view-data")
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                data.forEach(branch => {
+                    longitude = branch.coordinates.Longitude;
+                    latitude = branch.coordinates.Latitude;
 
-          var defaultRadius = -1; // in meters, cannot make the inital default circle not appear.
+                    if (longitude || latitude != undefined){
+                        var marker = L.marker([
+                            latitude,
+                            longitude
+                        ]).addTo(map);
+                    }
+
+                })
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+          
+          /*var defaultRadius = -1; // in meters, cannot make the inital default circle not appear.
           var circle = L.circle(
             [position.coords.latitude, position.coords.longitude],
             {
@@ -595,7 +603,7 @@
               fillOpacity: 0.5,
               radius: defaultRadius,
             }
-          ).addTo(map);
+          ).addTo(map);*/
 
           var slider = document.getElementById("radius-range");
           var output = document.getElementById("radius");
