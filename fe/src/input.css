@@ -42,7 +42,7 @@ h1.title {
 
 #filter-btn path {
     fill: #808080;
-    @apply transition duration-200;
+    @apply transition duration-75;
 }
 #filter-btn:hover path {
     fill: #4D4D4D;
@@ -54,4 +54,13 @@ h1.title {
 }
 #filter-box.visible {
     transform: translateY(0);
+}
+
+#list-view {
+    height: calc(100vh - 54px);
+    transition: transform 0.2s ease-in-out;
+    transform: translateX(-100%);
+}
+#list-view.visible {
+    transform: translateX(0);
 }
