@@ -94,7 +94,7 @@ function formatDataForDisplay(data, isATM = false) {
       // additional details specific to ATMs
       minimumAmount = item.MinimumPossibleAmount || "Not Available";
       id = item._id;
-      coordinates = item.Location?.GeoLocation?.GeographicCoordinates;
+      coordinates = item.Location?.PostalAddress?.GeoLocation?.GeographicCoordinates;
     } else {
       // additional details specific to branches
       openingHours = groupAndFormatOpeningHours(
