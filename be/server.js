@@ -1,9 +1,12 @@
 const express = require("express");
 const axios = require("axios");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 let branchesData = [];
 let atmsData = [];
+
+app.use(cors());
 
 // connect to MongoDB - if you decide this isn't needed, you can remove this section
 if (process.env.NODE_ENV !== "test") {
