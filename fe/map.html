@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <head>
     <link rel="stylesheet" href="dist/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -8,12 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
     <script src="https://kit.fontawesome.com/e5f42946b2.js" crossorigin="anonymous"></script>
+    <title>NCR Branches & ATMs</title>
 </head>
 
 <body>
     <div class="relative" style="z-index:20;">
         <div class="absolute inset-y-0 start-8 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="false" fill="none" viewbow="0 0 20 20">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="false" fill="none">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
             </svg>
         </div>
@@ -91,7 +93,7 @@
                 <div>
                     <h4 class="font-medium">Accessibility</h4>
                     <div class="flex items-center gap-x-2">
-                        <input type="checkbox" name="wheelchair_access" id="wheelchair_access"><label for="wheelchair_access">Wheelchair Access</label>
+                        <input type="checkbox" name="wheelchair_access_atm" id="wheelchair_access_atm"><label for="wheelchair_access_atm">Wheelchair Access</label>
                     </div>
                     <div class="flex items-center gap-x-2">
                         <input type="checkbox" name="audio_cash_machine" id="audio_cash_machine"><label for="audio_cash_machine">Audio Cash Machine</label>
@@ -270,90 +272,93 @@
             <div class="loader mx-auto mt-4"></div>
         </div>
     </div>
-</body>
 
-<script>
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            try {
-                // initialise map
-                var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 15);
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
 
-                // hide loading screen
-                var mapLoader = document.getElementById('map-loader');
-                mapLoader.classList.add('hidden');
-                mapLoader.classList.remove('grid');
-            } catch {
-                // display error if unable to load map
-                var map = document.getElementById('map');
-                map.innerHTML = '<p>There was an error loading the map</p>';
+    <script>
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                try {
+                    // initialise map
+                    var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 15);
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    
+                    // hide loading screen
+                    var mapLoader = document.getElementById('map-loader');
+                    mapLoader.classList.add('hidden');
+                    mapLoader.classList.remove('grid');
+                } catch {
+                    // display error if unable to load map
+                    var map = document.getElementById('map');
+                    map.innerHTML = '<p>There was an error loading the map</p>';
+                }
+            })
+        } else {
+            var map = document.getElementById('map');
+            map.innerHTML = '<p class="grid justify-center">Geolocation is unavailable for your browser</p>';
+        }
+    }
+
+      function toggleListView(){
+          listView = document.getElementById('list-view');
+          if (listView.classList.contains('hidden')){
+              listView.classList.remove('hidden');
+              setTimeout(function(){
+                  listView.classList.add('visible');
+              }, 10);
+          } else {
+              listView.classList.remove('visible');
+              setTimeout(function(){
+                  listView.classList.add('hidden');
+              }, 300)
+          }
+      }
+
+    
+        function toggleFilterBox() {
+            filterBox = document.getElementById('filter-box');
+    
+            if (filterBox.classList.contains('hidden')) {
+                filterBox.classList.remove('hidden');
+                setTimeout(function () {
+                    filterBox.classList.add('visible');
+                }, 10); // Delay the addition of 'visible' class
+            } else {
+                filterBox.classList.remove('visible');
+                setTimeout(function () {
+                    filterBox.classList.add('hidden');
+                }, 300); // Delay the addition of 'hidden' class to allow the animation to complete
             }
-        })
-    } else {
-        var map = document.getElementById('map');
-        map.innerHTML = '<p class="grid justify-center">Geolocation is unavailable for your browser</p>';
-    }
-
-    function toggleFilterBox() {
-        filterBox = document.getElementById('filter-box');
-
-        if (filterBox.classList.contains('hidden')) {
-            filterBox.classList.remove('hidden');
-            setTimeout(function () {
-                filterBox.classList.add('visible');
-            }, 10); // Delay the addition of 'visible' class
-        } else {
-            filterBox.classList.remove('visible');
-            setTimeout(function () {
-                filterBox.classList.add('hidden');
-            }, 300); // Delay the addition of 'hidden' class to allow the animation to complete
         }
-    }
-
-    function toggleListView(){
-        listView = document.getElementById('list-view');
-        if (listView.classList.contains('hidden')){
-            listView.classList.remove('hidden');
-            setTimeout(function(){
-                listView.classList.add('visible');
-            }, 10);
-        } else {
-            listView.classList.remove('visible');
-            setTimeout(function(){
-                listView.classList.add('hidden');
-            }, 300)
+    
+        function updateFilters(){
+            filterType = document.getElementById('filter-type');
+            atmFilters = document.getElementById('atm-filters');
+            branchFilters = document.getElementById('branch-filters');
+            if (filterType.value == 'branches'){
+                atmFilters.classList.add('hidden');
+                branchFilters.classList.remove('hidden');
+                branchFilters.style.borderBottom = '0px';
+            } else if (filterType.value == 'atms'){
+                branchFilters.classList.add('hidden');
+                atmFilters.classList.remove('hidden');
+            } else {
+                atmFilters.classList.remove('hidden');
+                branchFilters.classList.remove('hidden');
+                branchFilters.style.borderBottom = '1px solid #E5E7EB';
+            }
         }
-    }
-
-    function updateFilters(){
-        filterType = document.getElementById('filter-type');
-        atmFilters = document.getElementById('atm-filters');
-        branchFilters = document.getElementById('branch-filters');
-        if (filterType.value == 'branches'){
-            atmFilters.classList.add('hidden');
-            branchFilters.classList.remove('hidden');
-            branchFilters.style.borderBottom = '0px';
-        } else if (filterType.value == 'atms'){
-            branchFilters.classList.add('hidden');
-            atmFilters.classList.remove('hidden');
-        } else {
-            atmFilters.classList.remove('hidden');
-            branchFilters.classList.remove('hidden');
-            branchFilters.style.borderBottom = '1px solid #E5E7EB';
+    
+    
+        var slider = document.getElementById('radius-range');
+        var output = document.getElementById('radius');
+        output.innerHTML = slider.value + ' miles';
+    
+        slider.oninput = function(){
+            if (this.value == 1){
+                output.innerHTML = this.value + ' mile';
+            } else {
+                output.innerHTML = this.value + ' miles';
+            }  
         }
-    }
-
-
-    var slider = document.getElementById('radius-range');
-    var output = document.getElementById('radius');
-    output.innerHTML = slider.value + ' miles';
-
-    slider.oninput = function(){
-        if (this.value == 1){
-            output.innerHTML = this.value + ' mile';
-        } else {
-            output.innerHTML = this.value + ' miles';
-        }  
-    }
-</script>
+    </script>    
+</body>

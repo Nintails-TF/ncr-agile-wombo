@@ -47,33 +47,6 @@ app.get("/api/atms/:id", async (req, res) => {
   }
 });
 
-// GET ATM services by Identification
-app.get("/api/atms/:id/services", async (req, res) => {
-  try {
-    const atm = await db
-      .collection("ATMs")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { ATMServices: 1 } }
-      );
-    res.json(atm.ATMServices || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET ATMs with search functionality
-app.get("/api/atms/search", async (req, res) => {
-  try {
-    const query = {}; // Construct query based on req.query parameters
-    // Example: if (req.query.location) query['Location.TownName'] = req.query.location;
-    const atms = await db.collection("ATMs").find(query).toArray();
-    res.json(atms);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // UPDATE FUNCTIONS
 // UPDATE an ATM by Identification
 app.put("/api/atms/:id", async (req, res) => {
@@ -92,6 +65,7 @@ app.put("/api/atms/:id", async (req, res) => {
   }
 });
 
+
 // DELETE FUNCTIONS
 // DELETE an ATM by Identification
 app.delete("/api/atms/:id", async (req, res) => {
@@ -109,6 +83,7 @@ app.delete("/api/atms/:id", async (req, res) => {
   }
 });
 
+
 // POST FUNCTIONS
 // POST a new ATM
 app.post("/api/atms", async (req, res) => {
@@ -123,6 +98,7 @@ app.post("/api/atms", async (req, res) => {
 
 // BRANCH ENDPOINTS
 
+// GET FUNCTIONS
 // GET all Branches
 app.get("/api/branches", async (req, res) => {
   try {
@@ -147,136 +123,48 @@ app.get("/api/branches/:id", async (req, res) => {
   }
 });
 
-// GET Branch Accessibility by Identification
-app.get("/api/branches/:id/accessibility", async (req, res) => {
+// UPDATE FUNCTIONS
+// UPDATE a Branch by Identification
+app.put("/api/branches/:id", async (req, res) => {
   try {
-    const branch = await db
+    const updatedBranch = await db
       .collection("Branches")
-      .findOne(
+      .findOneAndUpdate(
         { Identification: req.params.id },
-        { projection: { Accessibility: 1 } }
+        { $set: req.body },
+        { returnDocument: "after" }
       );
-    res.json(branch.Accessibility || []);
+    console.log(updatedBranch);
+    res.json(updatedBranch);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// GET Branch ServiceAndFacility by Identification
-app.get("/api/branches/:id/service_and_facility", async (req, res) => {
+// DELETE FUNCTIONS
+// DELETE a Branch by Identification
+app.delete("/api/branches/:id", async (req, res) => {
   try {
-    const branch = await db
+    const deletedBranch = await db
       .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { ServiceAndFacility: 1 } }
-      );
-    res.json(branch.ServiceAndFacility || []);
+      .deleteOne({ Identification: req.params.id });
+    if (deletedBranch.deletedCount === 0) {
+      return res.status(404).json({ message: "Branch not found" });
+    }
+    console.log(deletedBranch);
+    res.status(204).json();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// GET Branch PostalAddress by Identification
-app.get("/api/branches/:id/postal_address", async (req, res) => {
+// POST FUNCTIONS
+// POST a new Branch
+app.post("/api/branches", async (req, res) => {
   try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { PostalAddress: 1 } }
-      );
-    res.json(branch.PostalAddress || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET Branch ContactInfo by Identification
-app.get("/api/branches/:id/contact_info", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { ContactInfo: 1 } }
-      );
-    res.json(branch.ContactInfo || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET Branch Availability by Identification
-app.get("/api/branches/:id/availability", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { Availability: 1 } }
-      );
-    res.json(branch.Availability || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET Branch CustomerSegment by Identification
-app.get("/api/branches/:id/customer_segment", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { CustomerSegment: 1 } }
-      );
-    res.json(branch.CustomerSegment || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET Branch Type by Identification
-app.get("/api/branches/:id/type", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { Type: 1 } }
-      );
-    res.json(branch.Type || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET Branch Name by Identification
-app.get("/api/branches/:id/name", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { Name: 1 } }
-      );
-    res.json(branch.Name || []);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET Branch SequenceNumber by Identification
-app.get("/api/branches/:id/sequence_number", async (req, res) => {
-  try {
-    const branch = await db
-      .collection("Branches")
-      .findOne(
-        { Identification: req.params.id },
-        { projection: { SequenceNumber: 1 } }
-      );
-    res.json(branch.SequenceNumber || []);
+    const newBranch = await db.collection("Branches").insertOne(req.body);
+    console.log(newBranch);
+    res.status(201).json(newBranch);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
