@@ -1,6 +1,7 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
 /.vs
+/.vs/ncr-agile-wombo/v17/.wsuo
 /.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
