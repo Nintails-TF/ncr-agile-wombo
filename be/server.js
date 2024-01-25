@@ -47,6 +47,7 @@ fetchDataAndStore();
 // function to format the data for displaying in list view
 function formatDataForDisplay(data, isATM = false) {
   return data.map((item, index) => {
+    // for ATMs, name is extracted from the Location property, otherwise use item.Name
     const name = item.Name || (isATM && item.Location?.Site?.Name);
 
     // building the address string
@@ -78,23 +79,33 @@ function formatDataForDisplay(data, isATM = false) {
       accessibilityFeatures = item.Accessibility?.join(", ");
     }
 
-    // additional details only for branches
-    let openingHours, phoneNumber, wifi;
-    if (!isATM) {
-      // Group and format opening hours for branches
+    // additional details for branches and ATMs
+    let openingHours,
+      phoneNumber,
+      wifi,
+      minimumAmount,
+      id,
+      customerSegment,
+      coordinates;
+    if (isATM) {
+      // additional details specific to ATMs
+      minimumAmount = item.MinimumPossibleAmount || "Not Available";
+      id = item._id;
+      coordinates = item.Location?.GeoLocation?.GeographicCoordinates;
+    } else {
+      // additional details specific to branches
       openingHours = groupAndFormatOpeningHours(
         item.Availability?.StandardAvailability?.Day
       );
-
-      // find phone number for branches
       phoneNumber = item.ContactInfo?.find(
         (ci) => ci.ContactType === "Phone"
       )?.ContactContent;
-
-      // check for WiFi availability in branches
       wifi = item.ServiceAndFacility?.includes("WiFi")
         ? "Available"
         : "Not Available";
+      id = item._id;
+      customerSegment = item.CustomerSegment?.join(", ") || "Not Available";
+      coordinates = item.PostalAddress?.GeoLocation?.GeographicCoordinates;
     }
 
     // return a structured object for each item
@@ -105,6 +116,10 @@ function formatDataForDisplay(data, isATM = false) {
       accessibilityFeatures: accessibilityFeatures || "Not Available",
       phoneNumber: !isATM ? phoneNumber || "Not Available" : undefined,
       wifi: !isATM ? wifi || "Not Available" : undefined,
+      minimumAmount: isATM ? minimumAmount : undefined,
+      id: id,
+      customerSegment: !isATM ? customerSegment : undefined,
+      coordinates: coordinates || "Not Available",
       type: isATM ? "ATM" : "Branch",
     };
   });
