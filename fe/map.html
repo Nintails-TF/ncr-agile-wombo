@@ -28,6 +28,7 @@
         </div>
         <i id="list-btn" class="fa-solid fa-list-ul text-[#808080] hover:text-[#4D4D4D] transition duration-75 cursor-pointer absolute text-xl bottom-4 left-2.5" onclick="toggleListView()"></i>
     </div>
+
     <div id="filter-box" class="absolute w-full lg:!w-2/3 2xl:!w-1/2 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl" style="z-index:10;">
         <div class="lg:flex items-center gap-x-8 pb-4 border-b mb-4">
             <div class="lg:flex items-center gap-x-2">
@@ -292,7 +293,8 @@
 
 
     <script>
-        if ("geolocation" in navigator) {
+        if ("geolocation" in navigator)
+        {
             navigator.geolocation.getCurrentPosition((position) => {
                 try {
                     // initialise map
@@ -303,11 +305,48 @@
                     var mapLoader = document.getElementById('map-loader');
                     mapLoader.classList.add('hidden');
                     mapLoader.classList.remove('grid');
+                    var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+
+                    var defaultRadius = -1; // in meters, cannot make the inital default circle not appear. 
+                     var circle = L.circle([position.coords.latitude, position.coords.longitude], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: defaultRadius
+                    }).addTo(map);
+
+                    var slider = document.getElementById('radius-range');
+                    var output = document.getElementById('radius');
+
+                    output.innerHTML = slider.value + ' miles';
+
+                    slider.oninput = function () {
+                        // Convert slider value to meters (Leaflet uses meters for radius)
+                        var radiusInMeters = this.value * 1609.34; // 1 mile = 1609.34 meters
+
+                        // Update the circle radius
+                        circle.setRadius(radiusInMeters);
+                        if (this.value == 0) {
+                            map.removeLayer(circle);
+                        } else {
+                            // If the slider value is not 0, show or add the circle
+                            if (!map.hasLayer(circle)) {
+                                map.addLayer(circle);
+                            }
+                        }
+                        // Update the output text
+                        if (this.value == 1) {
+                            output.innerHTML = this.value + ' mile';
+                        } else {
+                            output.innerHTML = this.value + ' miles';
+                        }
+                    };
                 } catch {
                     // display error if unable to load map
                     var map = document.getElementById('map');
                     map.innerHTML = '<p>There was an error loading the map</p>';
                 }
+
             })
         } else {
             var map = document.getElementById('map');
@@ -369,12 +408,12 @@
         var output = document.getElementById('radius');
         output.innerHTML = slider.value + ' miles';
     
-        slider.oninput = function(){
-            if (this.value == 1){
+        slider.oninput = function () {
+            if (this.value == 1) {
                 output.innerHTML = this.value + ' mile';
             } else {
                 output.innerHTML = this.value + ' miles';
-            }  
+            }
         }
     </script>    
 </body>
