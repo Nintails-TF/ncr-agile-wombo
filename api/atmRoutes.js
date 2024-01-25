@@ -3,6 +3,13 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const db = mongoose.connection;
 
+// Error handling function
+function handleError(res, error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+}
+
+
 // ATM ENDPOINTS
 
 // GET all ATMs
@@ -12,7 +19,7 @@ router.get("/api/atms", async (req, res) => {
         console.log(atms);
         res.json(atms);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -25,7 +32,7 @@ router.get("/api/atms/:id", async (req, res) => {
         console.log(atm);
         res.json(atm);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -42,7 +49,7 @@ router.put("/api/atms/:id", async (req, res) => {
         console.log(updatedAtm);
         res.json(updatedAtm);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -58,7 +65,7 @@ router.delete("/api/atms/:id", async (req, res) => {
         console.log(deletedAtm);
         res.status(204).json();
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
@@ -69,7 +76,7 @@ router.post("/api/atms", async (req, res) => {
         console.log(newAtm);
         res.status(201).json(newAtm);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleError(res, error);
     }
 });
 
