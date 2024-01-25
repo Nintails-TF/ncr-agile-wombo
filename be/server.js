@@ -32,60 +32,6 @@ async function fetchFromAPI(endpoint, params) {
   }
 }
 
-// function to format the data for displaying
-function formatDataForDisplay(data, isATM = false) {
-  // creating a new array with objects containing formatted data and a name for sorting
-  const mappedData = data.map((item, index) => {
-    const name = item.Name || (isATM && item.Location?.Site?.Name);
-    let address = "No address available";
-
-    // determine the address format based on whether it's an ATM or Branch
-    if (isATM) {
-      address = item.Location.PostalAddress.StreetName;
-    } else {
-      address =
-        `${item.PostalAddress.BuildingNumber} ${item.PostalAddress.StreetName}`.trim();
-    }
-
-    // return the formatted string and the name for sorting
-    return {
-      formattedString: isATM
-        ? `ATM ${index + 1}: ${name} - ${address}`
-        : `Branch ${item.Identification}: ${name} - ${address}`,
-      sortableName: name,
-    };
-  });
-
-  // sorting the array by name
-  mappedData.sort((a, b) => a.sortableName.localeCompare(b.sortableName));
-
-  // extracting just the formatted strings from the sorted array
-  return mappedData.map((item) => item.formattedString);
-}
-
-// function to process and extract coordinates for map visualization
-function processLocationsForMap() {
-  // combine and extract coordinates from stored branch and ATM data
-  const locations = [...branchesData, ...atmsData].map((item) => {
-    // check if the item is an ATM or a branch
-    const isATM = item.hasOwnProperty("Access24HoursIndicator"); // or any other distinguishing property
-
-    // get the correct coordinates based on whether it's an ATM or branch
-    const coords = isATM
-      ? item.Location.PostalAddress.GeoLocation.GeographicCoordinates
-      : item.PostalAddress.GeoLocation.GeographicCoordinates;
-
-    // return a formatted object with necessary data for each location
-    return {
-      latitude: parseFloat(coords.Latitude),
-      longitude: parseFloat(coords.Longitude),
-      id: item._id,
-    };
-  });
-
-  return locations;
-}
-
 // function to fetch and store data
 async function fetchDataAndStore() {
   try {
@@ -98,21 +44,111 @@ async function fetchDataAndStore() {
 
 fetchDataAndStore();
 
-// root route to fetch and display branches and ATMs data
-app.get("/", async (req, res) => {
-  try {
-    // sending formatted branch and ATM data as JSON
-    const formattedBranches = formatDataForDisplay(branchesData);
-    const formattedATMs = formatDataForDisplay(atmsData, true);
-    res.json({
-      branches: formattedBranches,
-      atms: formattedATMs,
-    });
-  } catch (error) {
-    // error handling for fetch operations
-    console.error("Error fetching data:", error.message);
-    res.status(500).send("Error processing request");
-  }
+// function to format the data for displaying in list view
+function formatDataForDisplay(data, isATM = false) {
+  return data.map((item, index) => {
+    const name = item.Name || (isATM && item.Location?.Site?.Name);
+
+    // building the address string
+    let address = "";
+    if (isATM) {
+      // for ATMs, extract address from the Location property
+      address = item.Location?.PostalAddress
+        ? `${item.Location.PostalAddress.StreetName}, ${item.Location.PostalAddress.CountrySubDivision}, ${item.Location.PostalAddress.PostCode}`
+        : "No address available";
+    } else {
+      // for branches, use the PostalAddress directly
+      address = item.PostalAddress
+        ? `${item.PostalAddress.StreetName}, ${item.PostalAddress.CountrySubDivision}, ${item.PostalAddress.PostCode}`
+        : "No address available";
+    }
+
+    // process accessibility features differently for branches and ATMs
+    let accessibilityFeatures = "";
+    if (isATM) {
+      // combining Accessibility and OtherAccessibility for ATMs
+      accessibilityFeatures = [
+        ...(item.Accessibility || []),
+        ...(item.OtherAccessibility
+          ? item.OtherAccessibility.map((oa) => oa.Name)
+          : []),
+      ].join(", ");
+    } else {
+      // only Accessibility for branches
+      accessibilityFeatures = item.Accessibility?.join(", ");
+    }
+
+    // additional details only for branches
+    let openingHours, phoneNumber, wifi;
+    if (!isATM) {
+      // Group and format opening hours for branches
+      openingHours = groupAndFormatOpeningHours(
+        item.Availability?.StandardAvailability?.Day
+      );
+
+      // find phone number for branches
+      phoneNumber = item.ContactInfo?.find(
+        (ci) => ci.ContactType === "Phone"
+      )?.ContactContent;
+
+      // check for WiFi availability in branches
+      wifi = item.ServiceAndFacility?.includes("WiFi")
+        ? "Available"
+        : "Not Available";
+    }
+
+    // return a structured object for each item
+    return {
+      name,
+      address,
+      openingHours: !isATM ? openingHours || "Not Available" : undefined,
+      accessibilityFeatures: accessibilityFeatures || "Not Available",
+      phoneNumber: !isATM ? phoneNumber || "Not Available" : undefined,
+      wifi: !isATM ? wifi || "Not Available" : undefined,
+      type: isATM ? "ATM" : "Branch",
+    };
+  });
+}
+
+// helper function to group and format opening hours
+function groupAndFormatOpeningHours(days) {
+  if (!days) return "Not Available"; // return "Not Available" if there are no days data
+
+  // reduce function to group days with the same opening hours
+  const groupedHours = days.reduce((acc, day) => {
+    // create a string representation of the opening hours for the current day
+    const hours = day.OpeningHours.map(
+      (oh) => `${oh.OpeningTime} - ${oh.ClosingTime}`
+    ).join(", ");
+
+    // group days with the same opening hours together
+    if (acc[hours]) {
+      acc[hours].push(day.Name);
+    } else {
+      acc[hours] = [day.Name];
+    }
+    return acc;
+  }, {});
+
+  // map over the grouped hours to create formatted strings
+  return Object.entries(groupedHours)
+    .map(([hours, days]) => {
+      // if multiple days have the same hours, concatenate their names
+      if (days.length > 1) {
+        return `${days[0].slice(0, 3)} - ${days[days.length - 1].slice(
+          0,
+          3
+        )} ${hours}`;
+      }
+      // if only one day has these hours, list it individually
+      return `${days[0]} ${hours}`;
+    })
+    .join("; "); // join the strings with semicolon and space
+}
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 
 // backend endpoint for getting branches from API
@@ -135,6 +171,24 @@ app.get("/atms", async (req, res) => {
     res.json(data);
   } catch (error) {
     // error handling for fetch operations
+    res.status(500).send("Error processing request");
+  }
+});
+
+// endpoint to get formatted data for list view
+app.get("/list-view-data", (req, res) => {
+  try {
+    // combine and format data from branches and ATMs
+    const formattedBranches = formatDataForDisplay(branchesData, false);
+    const formattedATMs = formatDataForDisplay(atmsData, true);
+
+    // combine formatted data from both branches and ATMs
+    const combinedData = [...formattedBranches, ...formattedATMs];
+
+    // send the combined data as a response
+    res.json(combinedData);
+  } catch (error) {
+    console.error("Error fetching data for list view:", error.message);
     res.status(500).send("Error processing request");
   }
 });
