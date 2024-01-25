@@ -81,13 +81,10 @@ function formatDataForDisplay(data, isATM = false) {
     // additional details only for branches
     let openingHours, phoneNumber, wifi;
     if (!isATM) {
-      // format opening hours for branches
-      openingHours = item.Availability?.StandardAvailability?.Day.map(
-        (day) =>
-          `${day.Name}: ${day.OpeningHours.map(
-            (oh) => `${oh.OpeningTime} - ${oh.ClosingTime}`
-          ).join(", ")}`
-      ).join("; ");
+      // Group and format opening hours for branches
+      openingHours = groupAndFormatOpeningHours(
+        item.Availability?.StandardAvailability?.Day
+      );
 
       // find phone number for branches
       phoneNumber = item.ContactInfo?.find(
@@ -110,7 +107,43 @@ function formatDataForDisplay(data, isATM = false) {
       wifi: !isATM ? wifi || "Not Available" : undefined,
       type: isATM ? "ATM" : "Branch",
     };
-  }); // removed sorting by name
+  });
+}
+
+// helper function to group and format opening hours
+function groupAndFormatOpeningHours(days) {
+  if (!days) return "Not Available"; // return "Not Available" if there are no days data
+
+  // reduce function to group days with the same opening hours
+  const groupedHours = days.reduce((acc, day) => {
+    // create a string representation of the opening hours for the current day
+    const hours = day.OpeningHours.map(
+      (oh) => `${oh.OpeningTime} - ${oh.ClosingTime}`
+    ).join(", ");
+
+    // group days with the same opening hours together
+    if (acc[hours]) {
+      acc[hours].push(day.Name);
+    } else {
+      acc[hours] = [day.Name];
+    }
+    return acc;
+  }, {});
+
+  // map over the grouped hours to create formatted strings
+  return Object.entries(groupedHours)
+    .map(([hours, days]) => {
+      // if multiple days have the same hours, concatenate their names
+      if (days.length > 1) {
+        return `${days[0].slice(0, 3)} - ${days[days.length - 1].slice(
+          0,
+          3
+        )} ${hours}`;
+      }
+      // if only one day has these hours, list it individually
+      return `${days[0]} ${hours}`;
+    })
+    .join("; "); // join the strings with semicolon and space
 }
 
 // Root endpoint
