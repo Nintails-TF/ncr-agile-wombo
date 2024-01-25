@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
     <script src="https://kit.fontawesome.com/e5f42946b2.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NCR Branches & ATMs</title>
+
 </head>
 
 <body>
@@ -19,20 +21,20 @@
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
             </svg>
         </div>
-        <input type="search" id="default-search" class="block w-full py-4 pr-4 text-sm text-gray-900 border border-gray-300 bg-gray-50" placeholder="Search Branches, ATMs etc..." required style="padding-inline-start:4.5rem;">
+        <input type="search" id="default-search" class="block w-full py-4 pr-4 text-sm text-gray-900 border border-gray-300 bg-gray-50" placeholder="Search Branches/ATMs" required style="padding-inline-start:4.5rem;">
         <button type="submit" class="text-black absolute end-12 bottom-2.5 bg-red-200 hover:bg-red-300 focus:ring-4 focus:outline-none focus:ring-red-100 font-medium rounded-lg text-sm px-4 py-2">Search</button>
         <div id="filter-btn" class="absolute end-2.5 bottom-2.5 rounded-full" onclick="toggleFilterBox()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-8 cursor-pointer"><path d="M12,7a2,2,0,1,0-2-2A2,2,0,0,0,12,7Zm0,10a2,2,0,1,0,2,2A2,2,0,0,0,12,17Zm0-7a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z"></path></svg>
         </div>
         <i id="list-btn" class="fa-solid fa-list-ul text-[#808080] hover:text-[#4D4D4D] transition duration-75 cursor-pointer absolute text-xl bottom-4 left-2.5" onclick="toggleListView()"></i>
     </div>
-    <div id="filter-box" class="absolute w-2/3 2xl:w-1/2 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl" style="z-index:10;">
-        <div class="flex items-center gap-x-8 pb-4 border-b mb-4">
-            <div class="flex items-center gap-x-2">
+    <div id="filter-box" class="absolute w-full lg:!w-2/3 2xl:!w-1/2 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl" style="z-index:10;">
+        <div class="lg:flex items-center gap-x-8 pb-4 border-b mb-4">
+            <div class="lg:flex items-center gap-x-2">
                 <label>Search radius</label><input type="range" min="0" max="25" value="5" class="slider" id="radius-range"><span id="radius"></span>
             </div>
             <div class="ml-auto">
-                <select id="filter-type" name="type" class="block text-sm" onchange="updateFilters()">
+                <select id="filter-type" name="type" class="block text-sm mt-4 lg:mt-0 w-full lg:w-max" onchange="updateFilters()">
                     <option selected value="branches_atms">Branches & ATMs</option>
                     <option value="branches">Branches</option>
                     <option value="atms">ATMs</option>
@@ -41,7 +43,7 @@
         </div>
         <div id="branch-filters" class="pb-4" style="border-bottom:1px solid #E5E7EB">
             <h3 class="font-medium">Branch Filters</h3>
-            <div class="grid grid-cols-3 mt-2">
+            <div class="lg:grid grid-cols-3 mt-2">
                 <div>
                     <h4 class="font-medium">Opening Times</h4>
                     <div class="flex items-center gap-x-2">
@@ -61,7 +63,7 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-medium">Accessibility</h4>
+                    <h4 class="font-medium mt-4 lg:mt-0">Accessibility</h4>
                     <div class="flex items-center gap-x-2">
                         <input type="checkbox" name="wheelchair_access" id="wheelchair_access"><label for="wheelchair_access">Wheelchair Access</label>
                     </div>
@@ -79,7 +81,7 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-medium">Services</h4>
+                    <h4 class="font-medium mt-4 lg:mt-0">Services</h4>
                     <div class="flex items-center gap-x-2">
                         <input type="checkbox" name="wifi" id="wifi"><label for="wifi">Wi-Fi</label>
                     </div>
@@ -89,7 +91,7 @@
         
         <div id="atm-filters">
             <h3 class="font-medium mt-4">ATM Filters</h3>
-            <div class="grid grid-cols-3 mt-2">
+            <div class="lg:grid grid-cols-3 mt-2">
                 <div>
                     <h4 class="font-medium">Accessibility</h4>
                     <div class="flex items-center gap-x-2">
@@ -100,7 +102,7 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-medium">Services</h4>
+                    <h4 class="font-medium mt-4 lg:mt-0">Services</h4>
                     <div class="flex items-center gap-x-2">
                         <input type="checkbox" name="cash_withdrawl" id="cash_withdrawl"><label for="cash_withdrawl">Cash Withdrawl</label>
                     </div>
@@ -124,13 +126,13 @@
         </div>
     </div>
 
-    <div id="list-view" class="absolute w-2/3 2xl:w-1/3 shadow-2xl px-8 py-4 z-10 bg-white overflow-y-auto hidden">
+    <div id="list-view" class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl px-8 py-4 z-10 bg-white overflow-y-auto hidden">
         <div class="flex pb-2 border-b items-center">
             <h2 class="font-semibold text-xl">Branches & ATMs</h2>
             <div class="text-4xl cursor-pointer w-max ml-auto justify-end text-gray-500 hover:text-gray-800" onclick="toggleListView()">&times;</div>
         </div>
         <div class="mt-4 border-b pb-4">
-            <div class="grid grid-cols-2">
+            <div class="lg:grid grid-cols-2">
                 <div>
                     <h4 class="font-medium text-lg">Santander UK PLC - Woking</h4>
                     <h5 class="text-sm">The Peacocks, Surrey, GU21 6GD</h5>
@@ -143,21 +145,24 @@
                         <li><i class="fa-regular fa-circle-check text-green-500 mr-1"></i>Wheelchair Access</li>
                     </ul>
                 </div>
-                <div class="text-right h-full grid">
+                <div class="lg:text-right lg:h-full grid mt-4 lg:mt-0">
                     <div>
-                        <div class="font-medium">
+                        <div class="lg:font-medium text-sm lg:text-base">
                             <p>Mon-Fri 09:30 - 17:00</p>
                             <p>Sat 09:30 - 16:00</p>
                         </div>
                         
-                        <img src="images/wifi.png" class="h-4 ml-auto mt-4" alt="Wi-Fi Access">
+                        <div class="flex mt-4 lg:mt-0">
+                            <img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access">
+                            <a href="tel:08000284157" class="lg:hidden text-sm ml-auto"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                        </div>
                     </div>
-                    <a href="tel:08000284157" class="mt-auto block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                    <a href="tel:08000284157" class="mt-auto hidden lg:block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
                 </div>
             </div>
         </div>
         <div class="mt-4 border-b pb-4">
-            <div class="grid grid-cols-2">
+            <div class="lg:grid grid-cols-2">
                 <div>
                     <h4 class="font-medium text-lg">Santander UK PLC - Woking</h4>
                     <h5 class="text-sm">The Peacocks, Surrey, GU21 6GD</h5>
@@ -170,21 +175,24 @@
                         <li><i class="fa-regular fa-circle-check text-green-500 mr-1"></i>Wheelchair Access</li>
                     </ul>
                 </div>
-                <div class="text-right h-full grid">
+                <div class="lg:text-right lg:h-full grid mt-4 lg:mt-0">
                     <div>
-                        <div class="font-medium">
+                        <div class="lg:font-medium text-sm lg:text-base">
                             <p>Mon-Fri 09:30 - 17:00</p>
                             <p>Sat 09:30 - 16:00</p>
                         </div>
                         
-                        <img src="images/wifi.png" class="h-4 ml-auto mt-4" alt="Wi-Fi Access">
+                        <div class="flex mt-4 lg:mt-0">
+                            <img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access">
+                            <a href="tel:08000284157" class="lg:hidden text-sm ml-auto"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                        </div>
                     </div>
-                    <a href="tel:08000284157" class="mt-auto block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                    <a href="tel:08000284157" class="mt-auto hidden lg:block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
                 </div>
             </div>
         </div>
         <div class="mt-4 border-b pb-4">
-            <div class="grid grid-cols-2">
+            <div class="lg:grid grid-cols-2">
                 <div>
                     <h4 class="font-medium text-lg">Santander UK PLC - Woking</h4>
                     <h5 class="text-sm">The Peacocks, Surrey, GU21 6GD</h5>
@@ -197,21 +205,24 @@
                         <li><i class="fa-regular fa-circle-check text-green-500 mr-1"></i>Wheelchair Access</li>
                     </ul>
                 </div>
-                <div class="text-right h-full grid">
+                <div class="lg:text-right lg:h-full grid mt-4 lg:mt-0">
                     <div>
-                        <div class="font-medium">
+                        <div class="lg:font-medium text-sm lg:text-base">
                             <p>Mon-Fri 09:30 - 17:00</p>
                             <p>Sat 09:30 - 16:00</p>
                         </div>
                         
-                        <img src="images/wifi.png" class="h-4 ml-auto mt-4" alt="Wi-Fi Access">
+                        <div class="flex mt-4 lg:mt-0">
+                            <img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access">
+                            <a href="tel:08000284157" class="lg:hidden text-sm ml-auto"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                        </div>
                     </div>
-                    <a href="tel:08000284157" class="mt-auto block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                    <a href="tel:08000284157" class="mt-auto hidden lg:block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
                 </div>
             </div>
         </div>
         <div class="mt-4 border-b pb-4">
-            <div class="grid grid-cols-2">
+            <div class="lg:grid grid-cols-2">
                 <div>
                     <h4 class="font-medium text-lg">Santander UK PLC - Woking</h4>
                     <h5 class="text-sm">The Peacocks, Surrey, GU21 6GD</h5>
@@ -224,21 +235,24 @@
                         <li><i class="fa-regular fa-circle-check text-green-500 mr-1"></i>Wheelchair Access</li>
                     </ul>
                 </div>
-                <div class="text-right h-full grid">
+                <div class="lg:text-right lg:h-full grid mt-4 lg:mt-0">
                     <div>
-                        <div class="font-medium">
+                        <div class="lg:font-medium text-sm lg:text-base">
                             <p>Mon-Fri 09:30 - 17:00</p>
                             <p>Sat 09:30 - 16:00</p>
                         </div>
                         
-                        <img src="images/wifi.png" class="h-4 ml-auto mt-4" alt="Wi-Fi Access">
+                        <div class="flex mt-4 lg:mt-0">
+                            <img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access">
+                            <a href="tel:08000284157" class="lg:hidden text-sm ml-auto"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                        </div>
                     </div>
-                    <a href="tel:08000284157" class="mt-auto block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                    <a href="tel:08000284157" class="mt-auto hidden lg:block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
                 </div>
             </div>
         </div>
         <div class="mt-4 border-b pb-4">
-            <div class="grid grid-cols-2">
+            <div class="lg:grid grid-cols-2">
                 <div>
                     <h4 class="font-medium text-lg">Santander UK PLC - Woking</h4>
                     <h5 class="text-sm">The Peacocks, Surrey, GU21 6GD</h5>
@@ -251,24 +265,27 @@
                         <li><i class="fa-regular fa-circle-check text-green-500 mr-1"></i>Wheelchair Access</li>
                     </ul>
                 </div>
-                <div class="text-right h-full grid">
+                <div class="lg:text-right lg:h-full grid mt-4 lg:mt-0">
                     <div>
-                        <div class="font-medium">
+                        <div class="lg:font-medium text-sm lg:text-base">
                             <p>Mon-Fri 09:30 - 17:00</p>
                             <p>Sat 09:30 - 16:00</p>
                         </div>
                         
-                        <img src="images/wifi.png" class="h-4 ml-auto mt-4" alt="Wi-Fi Access">
+                        <div class="flex mt-4 lg:mt-0">
+                            <img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access">
+                            <a href="tel:08000284157" class="lg:hidden text-sm ml-auto"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                        </div>
                     </div>
-                    <a href="tel:08000284157" class="mt-auto block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
+                    <a href="tel:08000284157" class="mt-auto hidden lg:block"><i class="fa-solid fa-phone mr-1"></i>08000284157</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="map" style="z-index:1">
-        <div id="map-loader" class="grid justify-center mt-12">
-            <h4 class="font-medium">Please enable location services...</h4>
+        <div id="map-loader" class="grid justify-center mt-24 lg:mt-12">
+            <h4 class="font-medium">Please allow location services...</h4>
             <div class="loader mx-auto mt-4"></div>
         </div>
     </div>
