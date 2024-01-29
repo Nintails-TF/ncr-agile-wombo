@@ -65,8 +65,9 @@
               "content": {
                 "application/json": {
                   "example": {
-                    "Accessibility": "WheelchairAccess",
-                    "ATMServices": "CashWithdrawal"
+                    "Accessibility": ["WheelchairAccess", "AudioCashMachine"],
+                    "ATMServices": ["CashWithdrawal", "ChequeDeposits"],
+                    "Access24HoursIndicator": false
                   }
                 }
               }
@@ -210,8 +211,8 @@
               "content": {
                 "application/json": {
                   "example": {
-                    "Accessibility": "WheelchairAccess",
-                    "ATMServices": "CashWithdrawal"
+                    "Accessibility": ["WheelchairAccess", "AutomaticDoors"],
+                    "ServiceAndFacility": ["WiFi"]
                   }
                 }
               }
