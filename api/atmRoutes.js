@@ -34,8 +34,9 @@ router.post("/api/atms/filter", async (req, res) => {
           },
           ATMServices : {
             $all: req.body.ATMServices ? req.body.ATMServices : ["CashWithdrawal", "CashDeposits", "PINChange", "ChequeDeposits", "Balance"],
-          }
-        })
+          },
+          Access24HoursIndicator: req.body.Access24HoursIndicator ? req.body.Access24HoursIndicator : {$in : [true, false],
+        }})
         .toArray();
       res.json(atms);
     } catch (error) {

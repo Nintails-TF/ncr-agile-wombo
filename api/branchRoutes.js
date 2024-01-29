@@ -32,11 +32,11 @@ router.post("/api/branches/filter", async (req, res) => {
             $all: req.body.Accessibility
               ? req.body.Accessibility
               : [
-                  "Wheelchair Access",
-                  "Lower-Level Counter",
-                  "Level Access",
-                  "Induction Loop",
-                  "Automatic Doors",
+                  "WheelchairAccess",
+                  "LowerLevelCounter",
+                  "LevelAccess",
+                  "InductionLoop",
+                  "AutomaticDoors",
                 ],
           },
           ServiceAndFacility: {
