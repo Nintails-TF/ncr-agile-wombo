@@ -4,8 +4,10 @@ const connectDB = require('./database'); // Import the database connection funct
 const atmRoutes = require('./atmRoutes');
 const branchRoutes = require('./branchRoutes');
 const app = express();
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors());
 
 connectDB(); // Connect to the database
 
