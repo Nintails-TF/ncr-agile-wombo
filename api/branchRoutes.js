@@ -25,7 +25,6 @@ router.get("/api/branches", async (req, res) => {
 
 router.post("/api/branches/filter", async (req, res) => {
     try {
-      console.log(req.body.Accessibility);
       const atms = await db
         .collection("Branches")
         .find({

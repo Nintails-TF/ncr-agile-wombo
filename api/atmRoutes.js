@@ -25,7 +25,6 @@ router.get("/api/atms", async (req, res) => {
 
 router.post("/api/atms/filter", async (req, res) => {
     try {
-      console.log(req.body.Accessibility);
       const atms = await db
         .collection("ATMs")
         .find({
@@ -38,7 +37,6 @@ router.post("/api/atms/filter", async (req, res) => {
           }
         })
         .toArray();
-      // console.log(atms);
       res.json(atms);
     } catch (error) {
       handleError(res, error);
