@@ -1,77 +1,37 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "version": "1.0.0",
-    "title": "Santander Banking API",
-    "description": "Documentation for Santander Banking API"
-  },
-  "servers": [
-    {
-      "url": "https://wombo-412213.nw.r.appspot.com",
-      "description": "API Server on Google App Engine"
-    }
-  ],
-  "paths": {
-    "/api/atms": {
-      "get": {
-        "summary": "Get all ATMs",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "example": {
-                  "atms": []
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new ATM",
-        "requestBody": {
-          "description": "ATM details",
-          "content": {
-            "application/json": {
-              "example": {
-                "key1": "value1",
-                "key2": "value2"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "ATM created successfully",
-            "content": {
-              "application/json": {
-                "example": {
-                  "key1": "value1",
-                  "key2": "value2"
-                }
-              }
-            }
-          }
-        }
-      }
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Santander Banking API",
+      "description": "Documentation for Santander Banking API"
     },
-    "/api/atms/{id}": {
-      "get": {
-        "summary": "Get ATM by Identification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+    "servers": [
+      {
+        "url": "https://wombo-412213.nw.r.appspot.com",
+        "description": "API Server on Google App Engine"
+      }
+    ],
+    "paths": {
+      "/api/atms": {
+        "get": {
+          "summary": "Get all ATMs",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "atms": []
+                  }
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
+        },
+        "post": {
+          "summary": "Create a new ATM",
+          "requestBody": {
+            "description": "ATM details",
             "content": {
               "application/json": {
                 "example": {
@@ -80,35 +40,81 @@
                 }
               }
             }
+          },
+          "responses": {
+            "201": {
+              "description": "ATM created successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "key1": "value1",
+                    "key2": "value2"
+                  }
+                }
+              }
+            }
           }
         }
       },
-      "put": {
-        "summary": "Update ATM by Identification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+      "/api/atms/filter": {
+        "post": {
+          "summary": "Get ATMs with specific filters",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "Accessibility": "WheelchairAccess",
+                    "ATMServices": "CashWithdrawal"
+                  }
+                }
+              }
             }
           }
-        ],
-        "requestBody": {
-          "description": "Updated ATM details",
-          "content": {
-            "application/json": {
-              "example": {
-                "key1": "updatedValue1",
-                "key2": "updatedValue2"
+        }
+      },
+      "/api/atms/{id}": {
+        "get": {
+          "summary": "Get ATM by Identification",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "key1": "value1",
+                    "key2": "value2"
+                  }
+                }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "ATM updated successfully",
+        "put": {
+          "summary": "Update ATM by Identification",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Updated ATM details",
             "content": {
               "application/json": {
                 "example": {
@@ -117,60 +123,60 @@
                 }
               }
             }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete ATM by Identification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "ATM deleted successfully"
-          }
-        }
-      }
-    },
-    "/api/branches": {
-      "get": {
-        "summary": "Get all Branches",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "example": {
-                  "branches": []
+          },
+          "responses": {
+            "200": {
+              "description": "ATM updated successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "key1": "updatedValue1",
+                    "key2": "updatedValue2"
+                  }
                 }
               }
             }
           }
+        },
+        "delete": {
+          "summary": "Delete ATM by Identification",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "ATM deleted successfully"
+            }
+          }
         }
       },
-      "post": {
-        "summary": "Create a new Branch",
-        "requestBody": {
-          "description": "Branch details",
-          "content": {
-            "application/json": {
-              "example": {
-                "key1": "value1",
-                "key2": "value2"
+      "/api/branches": {
+        "get": {
+          "summary": "Get all Branches",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "branches": []
+                  }
+                }
               }
             }
           }
         },
-        "responses": {
-          "201": {
-            "description": "Branch created successfully",
+        "post": {
+          "summary": "Create a new Branch",
+          "requestBody": {
+            "description": "Branch details",
             "content": {
               "application/json": {
                 "example": {
@@ -179,63 +185,81 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/branches/{id}": {
-      "get": {
-        "summary": "Get Branch by Identification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "example": {
-                  "key1": "value1",
-                  "key2": "value2"
+          },
+          "responses": {
+            "201": {
+              "description": "Branch created successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "key1": "value1",
+                    "key2": "value2"
+                  }
                 }
               }
             }
           }
         }
       },
-      "put": {
-        "summary": "Update Branch by Identification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+      "/api/branches/filter": {
+        "post": {
+          "summary": "Get Branches with specific filters",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "Accessibility": "WheelchairAccess",
+                    "ATMServices": "CashWithdrawal"
+                  }
+                }
+              }
             }
           }
-        ],
-        "requestBody": {
-          "description": "Updated Branch details",
-          "content": {
-            "application/json": {
-              "example": {
-                "key1": "updatedValue1",
-                "key2": "updatedValue2"
+        }
+      },
+      "/api/branches/{id}": {
+        "get": {
+          "summary": "Get Branch by Identification",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "key1": "value1",
+                    "key2": "value2"
+                  }
+                }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Branch updated successfully",
+        "put": {
+          "summary": "Update Branch by Identification",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Updated Branch details",
             "content": {
               "application/json": {
                 "example": {
@@ -244,27 +268,40 @@
                 }
               }
             }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Branch by Identification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+          },
+          "responses": {
+            "200": {
+              "description": "Branch updated successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "key1": "updatedValue1",
+                    "key2": "updatedValue2"
+                  }
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "204": {
-            "description": "Branch deleted successfully"
+        },
+        "delete": {
+          "summary": "Delete Branch by Identification",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Branch deleted successfully"
+            }
           }
         }
       }
     }
   }
-}
+  
