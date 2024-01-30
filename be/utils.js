@@ -83,40 +83,35 @@ function formatDataForDisplay(data, isATM = false) {
 }
 
 
-// helper function to group and format opening hours
+// Helper function to group and format opening hours.
 function groupAndFormatOpeningHours(days) {
-    if (!days) return "Not Available"; // return "Not Available" if there are no days data
+    // Check if the days data is available, return "Not Available" if not
+    if (!days) return "Not Available";
 
-    // reduce function to group days with the same opening hours
+    // Reduce the days array to group days with the same opening hours
     const groupedHours = days.reduce((acc, day) => {
-        // create a string representation of the opening hours for the current day
+        // Format the opening hours for the current day into a string
         const hours = day.OpeningHours.map(
-            (oh) => `${oh.OpeningTime} - ${oh.ClosingTime}`
+            oh => `${oh.OpeningTime} - ${oh.ClosingTime}`
         ).join(", ");
 
-        // group days with the same opening hours together
-        if (acc[hours]) {
-            acc[hours].push(day.Name);
-        } else {
-            acc[hours] = [day.Name];
-        }
+        // Group days with identical opening hours
+        acc[hours] = acc[hours] || [];
+        acc[hours].push(day.Name);
         return acc;
     }, {});
 
-    // map over the grouped hours to create formatted strings
+    // Convert the grouped hours object into a formatted string
     return Object.entries(groupedHours)
-        .map(([hours, days]) => {
-            // if multiple days have the same hours, concatenate their names
-            if (days.length > 1) {
-                return `${days[0].slice(0, 3)} - ${days[days.length - 1].slice(
-                    0,
-                    3
-                )} ${hours}`;
-            }
-            // if only one day has these hours, list it individually
-            return `${days[0]} ${hours}`;
+        .map(([hours, groupedDays]) => {
+            // Format differently based on whether multiple days share the same hours
+            return groupedDays.length > 1
+                ? `${groupedDays[0].slice(0, 3)} - ${groupedDays[groupedDays.length - 1].slice(0, 3)} ${hours}`
+                : `${groupedDays[0]} ${hours}`;
         })
-        .join("; "); // join the strings with semicolon and space
+        .join("; "); // Join all formatted strings with a semicolon and space
 }
+
+
 
 module.exports = { fetchFromAPI, formatDataForDisplay, groupAndFormatOpeningHours };
