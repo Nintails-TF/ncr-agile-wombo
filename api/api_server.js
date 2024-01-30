@@ -6,10 +6,31 @@ const branchRoutes = require('./branchRoutes');
 const app = express();
 const cors = require('cors');
 
+// Validate required environment variables
+if (!process.env.PORT) {
+    console.error("ERROR: PORT not specified in .env");
+    process.exit(1);
+}
+
+// Validate required environment variables
+if (!process.env.MONGO_URI) {
+    console.error("ERROR: MONGO_URI not specified in .env");
+    process.exit(1);
+}
+
+// Middleware
 app.use(express.json());
 app.use(cors());
 
-connectDB(); // Connect to the database
+// Database Connection
+connectDB().then(() => {
+    // Server Start
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`API server listening on port ${PORT}!`));
+}).catch(error => {
+    console.error("Database connection failed", error);
+    process.exit(1);
+});
 
 app.use(atmRoutes);
 app.use(branchRoutes);
@@ -29,7 +50,3 @@ app.use((error, req, res, next) => {
     console.error(error.stack);
     res.status(500).send('Something broke!');
 });
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`API server listening on port ${PORT}!`));
-
