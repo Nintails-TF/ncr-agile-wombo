@@ -1,10 +1,10 @@
-name: Lint and Test Code Base
+name: Unified CI/CD Workflow
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev, FE/**, BE/**, API/** ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev, FE/**, BE/**, API/** ]
 
 jobs:
   build:
@@ -12,13 +12,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '19.9.0'
+        node-version: '19.9.0' # Unified Node.js version
     - name: Install dependencies
       run: npm install
     - name: Run ESLint
       run: npm run lint
     - name: Run Tests
       run: npm test
+    - name: Build
+      run: npm run build
