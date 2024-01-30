@@ -1,21 +1,28 @@
 const axios = require('axios');
 
-// function to retrieve data from an endpoint
-async function fetchFromAPI(endpoint, params) {
+const API_BASE_URL = process.env.API_BASE_URL || 'https://wombo-412213.nw.r.appspot.com/api/';
+
+// Function to retrieve data from an endpoint
+async function fetchFromAPI(endpoint, params, headers = {}) {
     try {
-        // making a GET request to the API using axios
-        const response = await axios.get(
-            `https://wombo-412213.nw.r.appspot.com/api/${endpoint}`,
-            { params }
-        );
-        // returning the data from the API response
-        return response.data;
+        const response = await axios.get(`${API_BASE_URL}${endpoint}`, {
+            params,
+            headers,
+            timeout: 5000 // Timeout set to 5000 milliseconds
+        });
+        // Check if the response format is as expected
+        if (response && response.data) {
+            return response.data;
+        } else {
+            throw new Error('Unexpected response format');
+        }
     } catch (error) {
-        // logging the error and rethrowing it for caller handling
-        console.error("API request error:", error.message);
+        console.error(`API request error for ${endpoint}:`, error.message);
+        // Implement retry logic here if necessary
         throw error;
     }
 }
+
 
 // function to format the data for displaying in list view
 function formatDataForDisplay(data, isATM = false) {
