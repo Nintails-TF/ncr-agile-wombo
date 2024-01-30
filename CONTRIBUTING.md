@@ -8,6 +8,10 @@ Thank you for considering contributing to ncr-agile-wombo. This document outline
 - If you've added code, update the documentation accordingly.
 - Ensure your code adheres to the coding standards specified.
 
+## Testing & Linting
+- Github will run tests and lint automatically, but you can run them locally with:
+- npm run test and npm run lint
+
 ## Pull Requests
 - Fill out the provided PR template with all required details.
 - Link the PR to an issue.
