@@ -1,0 +1,19 @@
+name: PR Label Checker
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  label-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check for Labels
+      uses: actions/github-script@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const pr = context.payload.pull_request;
+          if (pr.labels.length === 0) {
+            core.setFailed("PR must have at least one label.");
+          }
