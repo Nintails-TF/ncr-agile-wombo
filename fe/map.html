@@ -329,8 +329,9 @@
                 console.log(data);
 
                 data.forEach(branch => {
+
                     var listItem = document.createElement("div");
-                    listItem.classList.add("mt-4", "border-b", "pb-4");
+                    listItem.classList.add("mt-6", "border-b", "pb-6", "mb-6", "relative");
 
                     var branchDetails = document.createElement("div");
                     branchDetails.classList.add("lg:grid", "grid-cols-2");
@@ -338,7 +339,7 @@
                     var infoColumn = document.createElement("div");
                     var detailsColumn = document.createElement("div");
 
-                    detailsColumn.classList.add('lg:text-right', 'lg:h-full', 'grid', 'mt-4', 'lg:mt-0')
+                    detailsColumn.classList.add('lg:text-right', 'lg:h-full', 'grid', 'mt-6', 'lg:mt-0')
 
                     // Populate branch details
                     var branchName = document.createElement("h4");
@@ -356,7 +357,11 @@
                         var listItem = document.createElement("li");
                         listItem.innerHTML = '<i class="fa-regular fa-circle-check text-green-500 mr-1"></i>' + feature;
                         accessibilityList.appendChild(listItem);
+
                     });
+
+
+                    
 
                     // Populate additional details based on branch or ATM
                     if (branch.type === 'ATM') {
@@ -394,6 +399,31 @@
                         phone.href = 'tel:' + branch.phoneNumber;
                         phone.classList.add('mt-auto', 'hidden', 'lg:block');
                         phone.innerHTML = '<i class="fa-solid fa-phone mr-1"></i>' + branch.phoneNumber;
+
+                        // Create the toMapButton
+                        var toMapButton = document.createElement('button');
+                        toMapButton.classList.add(
+                            'text-black',
+                            'end-12',
+                            'bottom-4',
+                            'bg-red-200',
+                            'hover:bg-red-300',
+                            'focus:ring-4',
+                            'focus:outline-none',
+                            'focus:ring-red-100',
+                            'font-medium',
+                            'rounded-lg',
+                            'text-sm',
+                            'px-4',
+                            'py-2'
+                        );
+                        toMapButton.innerHTML = 'Open in Google Maps';
+
+                        // Append the elements to the detailsColumn
+                        detailsColumn.appendChild(openingHours);
+                        detailsColumn.appendChild(wifi);
+                        detailsColumn.appendChild(phone);
+                        detailsColumn.appendChild(toMapButton);
                     }
 
                     // Append created elements to the list view
@@ -404,6 +434,7 @@
                     branchDetails.appendChild(detailsColumn);
                     listItem.appendChild(branchDetails);
                     listViewContainer.appendChild(listItem);
+
 
                     if (branch.type === 'Branch'){
                       detailsColumn.appendChild(openingHours);
