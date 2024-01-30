@@ -24,86 +24,64 @@ async function fetchFromAPI(endpoint, params, headers = {}) {
 }
 
 
-// function to format the data for displaying in list view
+// Formats the address of either an ATM or a Branch
+function formatAddress(item, isATM) {
+    if (isATM && item.Location?.PostalAddress) {
+        // Format address for ATM
+        return `${item.Location.PostalAddress.StreetName}, ${item.Location.PostalAddress.CountrySubDivision}, ${item.Location.PostalAddress.PostCode}`;
+    } else if (!isATM && item.PostalAddress) {
+        // Format address for Branch
+        return `${item.PostalAddress.StreetName}, ${item.PostalAddress.CountrySubDivision}, ${item.PostalAddress.PostCode}`;
+    }
+    // Default return when address is not available
+    return "No address available";
+}
+
+// Formats the accessibility features for ATMs and Branches
+function formatAccessibilityFeatures(item, isATM) {
+    if (isATM) {
+        // Combine general and other accessibility features for ATM
+        return [
+            ...(item.Accessibility || []),
+            ...(item.OtherAccessibility ? item.OtherAccessibility.map(access => access.Name) : []),
+        ].join(", ");
+    }
+    // For Branches, use only the Accessibility field
+    return item.Accessibility?.join(", ") || "Not Available";
+}
+
+// Formats data for displaying in a list view, catering to both ATMs and Branches
 function formatDataForDisplay(data, isATM = false) {
-    return data.map((item, index) => {
-        // for ATMs, name is extracted from the Location property, otherwise use item.Name
+    return data.map(item => {
+        // Determine name based on whether item is an ATM or Branch
         const name = item.Name || (isATM && item.Location?.Site?.Name);
+        // Format address
+        const address = formatAddress(item, isATM);
+        // Format accessibility features
+        const accessibilityFeatures = formatAccessibilityFeatures(item, isATM);
 
-        // building the address string
-        let address = "";
-        if (isATM) {
-            // for ATMs, extract address from the Location property
-            address = item.Location?.PostalAddress
-                ? `${item.Location.PostalAddress.StreetName}, ${item.Location.PostalAddress.CountrySubDivision}, ${item.Location.PostalAddress.PostCode}`
-                : "No address available";
-        } else {
-            // for branches, use the PostalAddress directly
-            address = item.PostalAddress
-                ? `${item.PostalAddress.StreetName}, ${item.PostalAddress.CountrySubDivision}, ${item.PostalAddress.PostCode}`
-                : "No address available";
-        }
+        // Process and include additional details for ATMs and Branches
+        let additionalDetails = {
+            openingHours: !isATM ? groupAndFormatOpeningHours(item.Availability?.StandardAvailability?.Day) || "Not Available" : undefined,
+            phoneNumber: !isATM ? item.ContactInfo?.find(contact => contact.ContactType === "Phone")?.ContactContent || "Not Available" : undefined,
+            wifi: !isATM ? (item.ServiceAndFacility?.includes("WiFi") ? "Available" : "Not Available") : undefined,
+            minimumAmount: isATM ? item.MinimumPossibleAmount || "Not Available" : undefined,
+            customerSegment: !isATM ? item.CustomerSegment?.join(", ") || "Not Available" : undefined,
+            coordinates: item.Location?.PostalAddress?.GeoLocation?.GeographicCoordinates || item.PostalAddress?.GeoLocation?.GeographicCoordinates || "Not Available",
+            id: item._id,
+            type: isATM ? "ATM" : "Branch",
+        };
 
-        // process accessibility features differently for branches and ATMs
-        let accessibilityFeatures = "";
-        if (isATM) {
-            // combining Accessibility and OtherAccessibility for ATMs
-            accessibilityFeatures = [
-                ...(item.Accessibility || []),
-                ...(item.OtherAccessibility
-                    ? item.OtherAccessibility.map((oa) => oa.Name)
-                    : []),
-            ].join(", ");
-        } else {
-            // only Accessibility for branches
-            accessibilityFeatures = item.Accessibility?.join(", ");
-        }
-
-        // additional details for branches and ATMs
-        let openingHours,
-            phoneNumber,
-            wifi,
-            minimumAmount,
-            id,
-            customerSegment,
-            coordinates;
-        if (isATM) {
-            // additional details specific to ATMs
-            minimumAmount = item.MinimumPossibleAmount || "Not Available";
-            id = item._id;
-            coordinates = item.Location?.PostalAddress?.GeoLocation?.GeographicCoordinates;
-        } else {
-            // additional details specific to branches
-            openingHours = groupAndFormatOpeningHours(
-                item.Availability?.StandardAvailability?.Day
-            );
-            phoneNumber = item.ContactInfo?.find(
-                (ci) => ci.ContactType === "Phone"
-            )?.ContactContent;
-            wifi = item.ServiceAndFacility?.includes("WiFi")
-                ? "Available"
-                : "Not Available";
-            id = item._id;
-            customerSegment = item.CustomerSegment?.join(", ") || "Not Available";
-            coordinates = item.PostalAddress?.GeoLocation?.GeographicCoordinates;
-        }
-
-        // return a structured object for each item
+        // Return a structured object with all formatted data
         return {
             name,
             address,
-            openingHours: !isATM ? openingHours || "Not Available" : undefined,
-            accessibilityFeatures: accessibilityFeatures || "Not Available",
-            phoneNumber: !isATM ? phoneNumber || "Not Available" : undefined,
-            wifi: !isATM ? wifi || "Not Available" : undefined,
-            minimumAmount: isATM ? minimumAmount : undefined,
-            id: id,
-            customerSegment: !isATM ? customerSegment : undefined,
-            coordinates: coordinates || "Not Available",
-            type: isATM ? "ATM" : "Branch",
+            accessibilityFeatures,
+            ...additionalDetails,
         };
     });
 }
+
 
 // helper function to group and format opening hours
 function groupAndFormatOpeningHours(days) {
