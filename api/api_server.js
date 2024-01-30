@@ -1,10 +1,14 @@
 require('dotenv').config();
 const express = require('express');
+const swaggerUi = require("swagger-ui-express");
 const connectDB = require('./database'); // Import the database connection function
 const atmRoutes = require('./atmRoutes');
 const branchRoutes = require('./branchRoutes');
 const app = express();
 const cors = require('cors');
+const swaggerDocument = require('./swagger.json');
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Validate required environment variables
 if (!process.env.PORT) {
