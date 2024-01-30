@@ -1,37 +1,127 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "Santander Branches and ATMs API",
-      "description": "Documentation for Santander Branches and ATMs API"
-    },
-    "servers": [
-      {
-        "url": "https://wombo-412213.nw.r.appspot.com",
-        "description": "API Server on Google App Engine"
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Santander Branches and ATMs API",
+    "description": "Documentation for Santander Branches and ATMs API"
+  },
+  "servers": [
+    {
+      "url": "https://wombo-412213.nw.r.appspot.com",
+      "description": "API Server on Google App Engine"
+    }
+  ],
+  "paths": {
+    "/api/atms": {
+      "get": {
+        "summary": "Get all ATMs",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "atms": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new ATM",
+        "requestBody": {
+          "description": "ATM details",
+          "content": {
+            "application/json": {
+              "example": {
+                "key1": "value1",
+                "key2": "value2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "ATM created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "key1": "value1",
+                  "key2": "value2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Invalid input data"
+                }
+              }
+            }
+          }
+        }
       }
-    ],
-    "paths": {
-      "/api/atms": {
-        "get": {
-          "summary": "Get all ATMs",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "atms": []
-                  }
-                }
+    },
+    "/api/atms/filter": {
+      "post": {
+        "summary": "Get ATMs with specific filters",
+        "requestBody": {
+          "description": "ATM properties to filter by",
+          "content": {
+            "application/json": {
+              "example": {
+                "Accessibility": ["WheelchairAccess", "AudioCashMachine"],
+                "ATMServices": ["CashWithdrawal", "ChequeDeposits"],
+                "Access24HoursIndicator": false,
+                "Longitude": -2.970721,
+                "Latitude": 53.409532,
+                "Radius": 5
               }
             }
           }
         },
-        "post": {
-          "summary": "Create a new ATM",
-          "requestBody": {
-            "description": "ATM details",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": []
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Invalid filter parameters"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/atms/{id}": {
+      "get": {
+        "summary": "Get ATM by Identification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "example": {
@@ -41,119 +131,44 @@
               }
             }
           },
-          "responses": {
-            "201": {
-              "description": "ATM created successfully",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "key1": "value1",
-                    "key2": "value2"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad request",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Invalid input data"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/api/atms/filter": {
-        "post": {
-          "summary": "Get ATMs with specific filters",
-          "requestBody": {
-            "description": "ATM properties to filter by",
+          "404": {
+            "description": "ATM not found",
             "content": {
               "application/json": {
                 "example": {
-                  "Accessibility": ["WheelchairAccess", "AudioCashMachine"],
-                  "ATMServices": ["CashWithdrawal", "ChequeDeposits"],
-                  "Access24HoursIndicator": false
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "example": []
-                }
-              }
-            },
-            "400": {
-              "description": "Bad request",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Invalid filter parameters"
-                  }
+                  "error": "ATM not found"
                 }
               }
             }
           }
         }
       },
-      "/api/atms/{id}": {
-        "get": {
-          "summary": "Get ATM by Identification",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
+      "put": {
+        "summary": "Update ATM by Identification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "key1": "value1",
-                    "key2": "value2"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "ATM not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "ATM not found"
-                  }
-                }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated ATM details",
+          "content": {
+            "application/json": {
+              "example": {
+                "key1": "updatedValue1",
+                "key2": "updatedValue2"
               }
             }
           }
         },
-        "put": {
-          "summary": "Update ATM by Identification",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "requestBody": {
-            "description": "Updated ATM details",
+        "responses": {
+          "200": {
+            "description": "ATM updated successfully",
             "content": {
               "application/json": {
                 "example": {
@@ -163,79 +178,79 @@
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "ATM updated successfully",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "key1": "updatedValue1",
-                    "key2": "updatedValue2"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "ATM not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "ATM not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete ATM by Identification",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "ATM deleted successfully"
-            },
-            "404": {
-              "description": "ATM not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "ATM not found"
-                  }
+          "404": {
+            "description": "ATM not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "ATM not found"
                 }
               }
             }
           }
         }
       },
-      "/api/branches": {
-        "get": {
-          "summary": "Get all Branches",
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "branches": []
-                  }
+      "delete": {
+        "summary": "Delete ATM by Identification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ATM deleted successfully"
+          },
+          "404": {
+            "description": "ATM not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "ATM not found"
                 }
               }
             }
           }
+        }
+      }
+    },
+    "/api/branches": {
+      "get": {
+        "summary": "Get all Branches",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "branches": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Branch",
+        "requestBody": {
+          "description": "Branch details",
+          "content": {
+            "application/json": {
+              "example": {
+                "key1": "value1",
+                "key2": "value2"
+              }
+            }
+          }
         },
-        "post": {
-          "summary": "Create a new Branch",
-          "requestBody": {
-            "description": "Branch details",
+        "responses": {
+          "201": {
+            "description": "Branch created successfully",
             "content": {
               "application/json": {
                 "example": {
@@ -245,118 +260,121 @@
               }
             }
           },
-          "responses": {
-            "201": {
-              "description": "Branch created successfully",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "key1": "value1",
-                    "key2": "value2"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad request",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Invalid input data"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/api/branches/filter": {
-        "post": {
-          "summary": "Get Branches with specific filters",
-          "requestBody": {
-            "description": "Branch properties to filter by",
+          "400": {
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "example": {
-                  "Accessibility": ["WheelchairAccess", "AutomaticDoors"],
-                  "ServiceAndFacility": ["WiFi"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "example": []
-                }
-              }
-            },
-            "400": {
-              "description": "Bad request",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Invalid filter parameters"
-                  }
+                  "error": "Invalid input data"
                 }
               }
             }
           }
         }
-      },
-      "/api/branches/{id}": {
-        "get": {
-          "summary": "Get Branch by Identification",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "key1": "value1",
-                    "key2": "value2"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Branch not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Branch not found"
-                  }
-                }
+      }
+    },
+    "/api/branches/filter": {
+      "post": {
+        "summary": "Get Branches with specific filters",
+        "requestBody": {
+          "description": "Branch properties to filter by",
+          "content": {
+            "application/json": {
+              "example": {
+                "Accessibility": ["WheelchairAccess", "AutomaticDoors"],
+                "ServiceAndFacility": ["WiFi"],
+                "Longitude": -2.970721,
+                "Latitude": 53.409532,
+                "Radius": 5
               }
             }
           }
         },
-        "put": {
-          "summary": "Update Branch by Identification",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": []
               }
             }
-          ],
-          "requestBody": {
-            "description": "Updated Branch details",
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Invalid filter parameters"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/branches/{id}": {
+      "get": {
+        "summary": "Get Branch by Identification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "key1": "value1",
+                  "key2": "value2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Branch not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Branch not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Branch by Identification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated Branch details",
+          "content": {
+            "application/json": {
+              "example": {
+                "key1": "updatedValue1",
+                "key2": "updatedValue2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Branch updated successfully",
             "content": {
               "application/json": {
                 "example": {
@@ -366,53 +384,40 @@
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Branch updated successfully",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "key1": "updatedValue1",
-                    "key2": "updatedValue2"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Branch not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Branch not found"
-                  }
+          "404": {
+            "description": "Branch not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Branch not found"
                 }
               }
             }
           }
-        },
-        "delete": {
-          "summary": "Delete Branch by Identification",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
+        }
+      },
+      "delete": {
+        "summary": "Delete Branch by Identification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          ],
-          "responses": {
-            "204": {
-              "description": "Branch deleted successfully"
-            },
-            "404": {
-              "description": "Branch not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "error": "Branch not found"
-                  }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Branch deleted successfully"
+          },
+          "404": {
+            "description": "Branch not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Branch not found"
                 }
               }
             }
@@ -421,4 +426,4 @@
       }
     }
   }
-  
+}
