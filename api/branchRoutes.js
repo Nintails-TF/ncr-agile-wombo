@@ -23,6 +23,35 @@ router.get("/api/branches", async (req, res) => {
     }
 });
 
+router.post("/api/branches/filter", async (req, res) => {
+    try {
+      const atms = await db
+        .collection("Branches")
+        .find({
+          Accessibility: {
+            $all: req.body.Accessibility
+              ? req.body.Accessibility
+              : [
+                  "WheelchairAccess",
+                  "LowerLevelCounter",
+                  "LevelAccess",
+                  "InductionLoop",
+                  "AutomaticDoors",
+                ],
+          },
+          ServiceAndFacility: {
+            $all: req.body.ServiceAndFacility
+              ? req.body.ServiceAndFacility
+              : ["WiFi"],
+          },
+        })
+        .toArray();
+      res.json(atms);
+    } catch (error) {
+      handleError(res, error);
+    }
+  });
+
 // GET Branch by Identification
 router.get("/api/branches/:id", async (req, res) => {
     try {

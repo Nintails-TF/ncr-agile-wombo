@@ -23,6 +23,27 @@ router.get("/api/atms", async (req, res) => {
     }
 });
 
+router.post("/api/atms/filter", async (req, res) => {
+    try {
+      const atms = await db
+        .collection("ATMs")
+        .find({
+          Accessibility: { $all: req.body.Accessibility ? req.body.Accessibility : ["AudioCashMachine", "WheelchairAccess",]},
+          ATMServices: {
+            $all: req.body.ATMServices,
+          },
+          ATMServices : {
+            $all: req.body.ATMServices ? req.body.ATMServices : ["CashWithdrawal", "CashDeposits", "PINChange", "ChequeDeposits", "Balance"],
+          },
+          Access24HoursIndicator: req.body.Access24HoursIndicator ? req.body.Access24HoursIndicator : {$in : [true, false],
+        }})
+        .toArray();
+      res.json(atms);
+    } catch (error) {
+      handleError(res, error);
+    }
+  });
+
 // GET ATM by Identification
 router.get("/api/atms/:id", async (req, res) => {
     try {
