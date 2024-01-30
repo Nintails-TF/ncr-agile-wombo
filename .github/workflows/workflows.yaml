@@ -7,7 +7,7 @@ on:
     branches: [ main, dev, FE/**, BE/**, API/** ]
 
 jobs:
-  build:
+  BE-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,12 +15,18 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
-    - name: Install dependencies
+        node-version: '19.9.0'
+    - name: Change to BE directory
+      run: cd be
+    - name: Install BE dependencies
       run: npm install
-    - name: Run ESLint
+      working-directory: be
+    - name: Run ESLint in BE
       run: npm run lint
-    - name: Run Tests
+      working-directory: be
+    - name: Run Tests in BE
       run: npm test
-    - name: Build
+      working-directory: be
+    - name: Build BE
       run: npm run build
+      working-directory: be
