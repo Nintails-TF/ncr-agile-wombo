@@ -400,30 +400,13 @@
                         phone.classList.add('mt-auto', 'hidden', 'lg:block');
                         phone.innerHTML = '<i class="fa-solid fa-phone mr-1"></i>' + branch.phoneNumber;
 
-                        // Create the toMapButton
-                        var toMapButton = document.createElement('button');
-                        toMapButton.classList.add(
-                            'text-black',
-                            'end-12',
-                            'bottom-4',
-                            'bg-red-200',
-                            'hover:bg-red-300',
-                            'focus:ring-4',
-                            'focus:outline-none',
-                            'focus:ring-red-100',
-                            'font-medium',
-                            'rounded-lg',
-                            'text-sm',
-                            'px-4',
-                            'py-2'
-                        );
-                        toMapButton.innerHTML = 'Open in Google Maps';
+                       
 
                         // Append the elements to the detailsColumn
                         detailsColumn.appendChild(openingHours);
                         detailsColumn.appendChild(wifi);
                         detailsColumn.appendChild(phone);
-                        detailsColumn.appendChild(toMapButton);
+
                     }
 
                     // Append created elements to the list view
@@ -434,6 +417,7 @@
                     branchDetails.appendChild(detailsColumn);
                     listItem.appendChild(branchDetails);
                     listViewContainer.appendChild(listItem);
+
 
 
                     if (branch.type === 'Branch'){
@@ -461,6 +445,32 @@
                             ]).addTo(map);
                         }
                     }
+                    // Create the toMapButton
+                    var toMapButton = document.createElement('button');
+                    toMapButton.classList.add(
+                        'text-black',
+                        'w-max',
+                        'bg-red-200',
+                        'hover:bg-red-300',
+                        'focus:ring-4',
+                        'focus:outline-none',
+                        'focus:ring-red-100',
+                        'font-medium',
+                        'rounded-lg',
+                        'text-sm',
+                        'px-4',
+                        'py-2',
+                        'right-2',
+                        'ml-auto'
+                    );
+                    toMapButton.innerHTML = 'Open in Google Maps';
+
+                    // Add a click event listener to open Google Maps with the specific latitude and longitude
+                    toMapButton.addEventListener('click', function () {
+                        var googleMapsUrl = 'https://www.google.com/maps?q=' + latitude + ',' + longitude;
+                        window.open(googleMapsUrl, '_blank');
+                    });
+                    detailsColumn.appendChild(toMapButton);
                     marker.bindPopup('<b>' + branch.type + '</b>' + ' - ' + branch.name);
                 })
             })
