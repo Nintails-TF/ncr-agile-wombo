@@ -9,14 +9,7 @@ let atmsData = [];
 app.use(cors());
 
 // connect to MongoDB - if you decide this isn't needed, you can remove this section
-if (process.env.NODE_ENV !== "test") {
-  mongoose
-    .connect(
-      "mongodb+srv://2455344:hello12345@unicluster.0xfojui.mongodb.net/?retryWrites=true&w=majority"
-    )
-    .then(() => console.log("MongoDB Connected"))
-    .catch((err) => console.log(err));
-}
+connectDB();
 
 // function to retrieve data from an endpoint
 async function fetchFromAPI(endpoint, params) {
