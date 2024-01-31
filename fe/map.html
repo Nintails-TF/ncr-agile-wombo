@@ -319,19 +319,43 @@
             shadowSize: [41, 41]
         });
 
-          var listViewContainer = document.getElementById("list-view");
+        var filterData = {
+            "Accessibility": [
+            "InductionLoop"
+          ],
+          "ServiceAndFacility": [
+            "WiFi"
+          ],
+          "Longitude": -2.970721,
+          "Latitude": 53.409532,
+          "Radius": 5     
+          }
 
-          // Clear existing content in the list view
+          fetch("http://localhost:3000/branches/filter", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(filterData)
+          })
+            .then((response) => response.json())
+            .then((filteredData) => {
+              console.log(filteredData)
+            })
+            .catch((error) => {
+              console.log("Error applying filters", error);
+            })
+
+          var listViewContainer = document.getElementById("list-view");
           
-          fetch("http://localhost:3000/list-view-data")
+          /*fetch("http://localhost:3000/list-view-data")
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
 
                 data.forEach(branch => {
-
                     var listItem = document.createElement("div");
-                    listItem.classList.add("mt-6", "border-b", "pb-6", "mb-6", "relative");
+                    listItem.classList.add("mt-4", "border-b", "pb-4");
 
                     var branchDetails = document.createElement("div");
                     branchDetails.classList.add("lg:grid", "grid-cols-2");
@@ -339,7 +363,7 @@
                     var infoColumn = document.createElement("div");
                     var detailsColumn = document.createElement("div");
 
-                    detailsColumn.classList.add('lg:text-right', 'lg:h-full', 'grid', 'mt-6', 'lg:mt-0')
+                    detailsColumn.classList.add('lg:text-right', 'lg:h-full', 'grid', 'mt-4', 'lg:mt-0')
 
                     // Populate branch details
                     var branchName = document.createElement("h4");
@@ -357,11 +381,7 @@
                         var listItem = document.createElement("li");
                         listItem.innerHTML = '<i class="fa-regular fa-circle-check text-green-500 mr-1"></i>' + feature;
                         accessibilityList.appendChild(listItem);
-
                     });
-
-
-                    
 
                     // Populate additional details based on branch or ATM
                     if (branch.type === 'ATM') {
@@ -399,14 +419,6 @@
                         phone.href = 'tel:' + branch.phoneNumber;
                         phone.classList.add('mt-auto', 'hidden', 'lg:block');
                         phone.innerHTML = '<i class="fa-solid fa-phone mr-1"></i>' + branch.phoneNumber;
-
-                       
-
-                        // Append the elements to the detailsColumn
-                        detailsColumn.appendChild(openingHours);
-                        detailsColumn.appendChild(wifi);
-                        detailsColumn.appendChild(phone);
-
                     }
 
                     // Append created elements to the list view
@@ -418,17 +430,20 @@
                     listItem.appendChild(branchDetails);
                     listViewContainer.appendChild(listItem);
 
-
-
                     if (branch.type === 'Branch'){
                       detailsColumn.appendChild(openingHours);
                       detailsColumn.appendChild(wifi);
                       detailsColumn.appendChild(phone);
                     }
+
+                    var btn = document.createElement('button');
+                    btn.classList.add('bg-red-400');
+                    btn.innerHTML = 'test';
        
+                    detailsColumn.appendChild(btn);
                     
-                   var longitude = branch.coordinates.Longitude;
-                   var latitude = branch.coordinates.Latitude;
+                    longitude = branch.coordinates.Longitude;
+                    latitude = branch.coordinates.Latitude;
 
                     if (branch.type == 'ATM'){
                         if (longitude || latitude != undefined){
@@ -445,32 +460,6 @@
                             ]).addTo(map);
                         }
                     }
-                    // Create the toMapButton
-                    var toMapButton = document.createElement('button');
-                    toMapButton.classList.add(
-                        'text-black',
-                        'w-max',
-                        'bg-red-200',
-                        'hover:bg-red-300',
-                        'focus:ring-4',
-                        'focus:outline-none',
-                        'focus:ring-red-100',
-                        'font-medium',
-                        'rounded-lg',
-                        'text-sm',
-                        'px-4',
-                        'py-2',
-                        'right-2',
-                        'ml-auto'
-                    );
-                    toMapButton.innerHTML = 'Open in Google Maps';
-
-                    // Add a click event listener to open Google Maps with the specific latitude and longitude
-                    toMapButton.addEventListener('click', function () {
-                        var googleMapsUrl = 'https://www.google.com/maps?q=' + latitude + ',' + longitude;
-                        window.open(googleMapsUrl, '_blank');
-                    });
-                    detailsColumn.appendChild(toMapButton);
                     marker.bindPopup('<b>' + branch.type + '</b>' + ' - ' + branch.name);
                 })
             })
