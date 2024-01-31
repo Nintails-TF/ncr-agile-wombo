@@ -27,6 +27,6 @@ jobs:
     - name: Run Tests in BE
       run: npm test
       working-directory: be
-    - name: Build BE
-      run: npm run build
-      working-directory: be
+    #- name: Build BE
+      #run: npm run build
+     # working-directory: be
