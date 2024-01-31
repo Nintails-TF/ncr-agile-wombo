@@ -71,4 +71,28 @@ router.get("/map-locations", (req, res) => {
     res.json(locationData);
 });
 
+// Creating end points for /api/atms/filter
+router.get("/atms/filter", async (req, res) => {
+    try {
+        // fetching ATM filters from API and returning as JSON
+        const data = await fetchFromAPI("atms/filter", req.query);
+        res.json(data);
+    } catch (error) {
+        // error handling for fetch operations
+        res.status(500).send("Error processing request");
+    }
+});
+
+// Creating end points for /api/branches/filter
+router.get("/branches/filter", async (req, res) => {
+    try {
+        // fetching branch filters from API and returning as JSON
+        const data = await fetchFromAPI("branches/filter", req.query);
+        res.json(data);
+    } catch (error) {
+        // error handling for fetch operations
+        res.status(500).send("Error processing request");
+    }
+});
+
 module.exports = router;
