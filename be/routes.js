@@ -87,7 +87,7 @@ router.get("/atms/filter", async (req, res) => {
 router.get("/branches/filter", async (req, res) => {
     try {
         // fetching branch filters from API and returning as JSON
-        const data = await fetchFromAPI("atms/filter", req.query);
+        const data = await fetchFromAPI("branches/filter", req.query);
         res.json(data);
     } catch (error) {
         // error handling for fetch operations
