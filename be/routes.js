@@ -64,12 +64,12 @@ router.get("/list-view-data", (req, res) => {
     }
 });
 
-router.get("/map-locations", (req, res) => {
+/*router.get("/map-locations", (req, res) => {
     console.log("Received request for map locations");
     const locationData = processLocationsForMap();
     console.log("Location data:", locationData);
     res.json(locationData);
-});
+});*/
 
 router.post("/atms/filter", async (req, res) => {
     try {
