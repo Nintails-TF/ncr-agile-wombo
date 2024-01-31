@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { fetchFromAPI, formatDataForDisplay } = require("./utils");
-const { getCacheKey, getCachedData, setCachedData } = require('./cacheUtil');
+const { getCacheKey, getCachedData, setCachedData, withCache } = require('./cacheUtil');
+
 
 
 const axios = require("axios");
@@ -29,31 +30,28 @@ router.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// backend endpoint for getting branches from API
 router.get("/branches", async (req, res) => {
-  try {
-    // fetching branch data from the API and returning as JSON
-    const data = await fetchFromAPI("branches", req.query);
-    res.json(data);
-  } catch (error) {
-    // error handling for fetch operations
-    res.status(500).send("Error processing request");
-  }
+    try {
+        const requestData = { params: req.query };
+        const data = await withCache(fetchFromAPI, "branches", requestData, 'GET');
+        res.json(data);
+    } catch (error) {
+        res.status(500).send("Error processing request");
+    }
 });
+
 
 // backend endpoint for getting ATMs from API
 router.get("/atms", async (req, res) => {
-    console.log("GET /atms called with query params:", req.query);
-
-  try {
-    // fetching ATM data from the API and returning as JSON
-    const data = await fetchFromAPI("atms", req.query);
-    res.json(data);
-  } catch (error) {
-    // error handling for fetch operations
-    res.status(500).send("Error processing request");
-  }
+    try {
+        const requestData = { params: req.query };
+        const data = await withCache(fetchFromAPI, "atms", requestData, 'GET');
+        res.json(data);
+    } catch (error) {
+        res.status(500).send("Error processing request");
+    }
 });
+
 
 // endpoint to get formatted data for list view
 router.get("/list-view-data", (req, res) => {
@@ -92,10 +90,8 @@ function createFilterConfig(apiEndpoint, filterCriteria) {
     };
 }
 
-// Route for getting filtered ATMs
 router.post("/atms/filter", async (req, res) => {
     try {
-        // Specific structure for ATM request body
         const atmFilterCriteria = {
             Accessibility: req.body.Accessibility,
             ATMServices: req.body.ATMServices,
@@ -105,31 +101,22 @@ router.post("/atms/filter", async (req, res) => {
             Radius: req.body.Radius,
         };
 
-        const cacheKey = getCacheKey("atms/filter", atmFilterCriteria, "POST");
-        let cachedData = getCachedData(cacheKey);
+        const requestData = {
+            body: atmFilterCriteria,
+            headers: { "Content-Type": "application/json" }
+        };
 
-        if (cachedData) {
-            console.log(`Cache hit for ${cacheKey} in /atms/filter`);
-            return res.json(cachedData);
-        }
-
-        const filterConfig = createFilterConfig("atms/filter", atmFilterCriteria);
-        const filteredAtms = await axios(filterConfig);
-        setCachedData(cacheKey, filteredAtms.data);
-        res.json(filteredAtms.data);
-
+        const data = await withCache(fetchFromAPI, "atms/filter", requestData, 'POST');
+        res.json(data);
     } catch (error) {
         console.error("Error in /atms/filter route:", error.message);
         res.status(500).send("Error processing request");
     }
-
-
 });
 
-// Route for getting filtered branches
+
 router.post("/branches/filter", async (req, res) => {
     try {
-        // Specific structure for Branch request body
         const branchFilterCriteria = {
             Accessibility: req.body.Accessibility,
             ServiceAndFacility: req.body.ServiceAndFacility,
@@ -138,25 +125,46 @@ router.post("/branches/filter", async (req, res) => {
             Radius: req.body.Radius,
         };
 
-        const cacheKey = getCacheKey("branches/filter", branchFilterCriteria, "POST");
-        let cachedData = getCachedData(cacheKey);
+        const requestData = {
+            body: branchFilterCriteria,
+            headers: { "Content-Type": "application/json" }
+        };
 
-        if (cachedData) {
-            console.log(`Cache hit for ${cacheKey} in /branches/filter`);
-            return res.json(cachedData);
-        }
-
-        const filterConfig = createFilterConfig("branches/filter", branchFilterCriteria);
-        const filteredBranches = await axios(filterConfig);
-        setCachedData(cacheKey, filteredBranches.data);
-        res.json(filteredBranches.data);
-
-
+        const data = await withCache(fetchFromAPI, "branches/filter", requestData, 'POST');
+        res.json(data);
     } catch (error) {
         console.error("Error in /branches/filter route:", error.message);
         res.status(500).send("Error processing request");
     }
 });
+
+
+
+
+// Route for getting filtered branches
+router.post("/branches/filter", async (req, res) => {
+    try {
+        const branchFilterCriteria = {
+            Accessibility: req.body.Accessibility,
+            ServiceAndFacility: req.body.ServiceAndFacility,
+            Latitude: req.body.Latitude,
+            Longitude: req.body.Longitude,
+            Radius: req.body.Radius,
+        };
+
+        // Using withCache but wrapping axios call in a function
+        const data = await withCache(async () => {
+            const response = await axios(createFilterConfig("branches/filter", branchFilterCriteria));
+            return response.data;
+        }, "branches/filter", branchFilterCriteria, 'POST');
+
+        res.json(data);
+    } catch (error) {
+        console.error("Error in /branches/filter route:", error.message);
+        res.status(500).send("Error processing request");
+    }
+});
+
 
 router.get("/test-cache", async (req, res) => {
     const testKey = "testKey";

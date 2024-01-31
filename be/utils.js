@@ -4,47 +4,35 @@ const { getCacheKey, getCachedData, setCachedData } = require('./cacheUtil');
 
 const API_BASE_URL = process.env.API_BASE_URL || 'https://wombo-412213.nw.r.appspot.com/api/';
 
-// Modified function to handle both GET and POST requests
-async function fetchFromAPI(endpoint, data, method = 'GET') {
-    const cacheKey = getCacheKey(endpoint, data, method);
-    let cachedData = getCachedData(cacheKey);
-
-    if (cachedData) {
-        console.log(`Cache hit for ${cacheKey}`);
-        return cachedData;
-    } else {
-        console.log(`Cache miss for ${cacheKey}`);
-    }
-
-    
+// General function to handle API requests
+async function fetchFromAPI(endpoint, requestData, method = 'GET') {
     try {
         let response;
+
+        const url = `${API_BASE_URL}${endpoint}`;
+        const config = {
+            timeout: 5000,
+            headers: requestData.headers || {}, // Custom headers if provided
+        };
+
         if (method === 'GET') {
-            response = await axios.get(`${API_BASE_URL}${endpoint}`, {
-                params: data,
-                timeout: 5000
-            });
+            // Performing a GET request
+            config.params = requestData.params;
+            response = await axios.get(url, config);
         } else if (method === 'POST') {
-            response = await axios.post(`${API_BASE_URL}${endpoint}`, data, {
-                timeout: 5000
-            });
+            // Performing a POST request
+            response = await axios.post(url, requestData.body, config);
         }
 
         if (response && response.data) {
-            console.log(`Caching new data for ${cacheKey}`);
-            setCachedData(cacheKey, response.data);
             return response.data;
         } else {
-            throw new Error('Unexpected response format or no data to cache');
+            throw new Error('Unexpected response format or no data');
         }
     } catch (error) {
         console.error(`API request error for ${endpoint}:`, error.message);
         throw error;
     }
-
-    console.log(`Caching new data for ${cacheKey}`);
-    setCachedData(cacheKey, response.data);
-    return response.data;
 }
 
 
