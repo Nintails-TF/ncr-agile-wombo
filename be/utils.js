@@ -2,15 +2,21 @@ const axios = require('axios');
 
 const API_BASE_URL = process.env.API_BASE_URL || 'https://wombo-412213.nw.r.appspot.com/api/';
 
-// Function to retrieve data from an endpoint
-async function fetchFromAPI(endpoint, params, headers = {}) {
+// Modified function to handle both GET and POST requests
+async function fetchFromAPI(endpoint, data, method = 'GET') {
     try {
-        const response = await axios.get(`${API_BASE_URL}${endpoint}`, {
-            params,
-            headers,
-            timeout: 5000 // Timeout set to 5000 milliseconds
-        });
-        // Check if the response format is as expected
+        let response;
+        if (method === 'GET') {
+            response = await axios.get(`${API_BASE_URL}${endpoint}`, {
+                params: data,
+                timeout: 5000
+            });
+        } else if (method === 'POST') {
+            response = await axios.post(`${API_BASE_URL}${endpoint}`, data, {
+                timeout: 5000
+            });
+        }
+
         if (response && response.data) {
             return response.data;
         } else {
@@ -18,10 +24,10 @@ async function fetchFromAPI(endpoint, params, headers = {}) {
         }
     } catch (error) {
         console.error(`API request error for ${endpoint}:`, error.message);
-        // Implement retry logic here if necessary
         throw error;
     }
 }
+
 
 
 // Formats the address of either an ATM or a Branch

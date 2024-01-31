@@ -38,7 +38,7 @@ router.get("/branches", async (req, res) => {
 router.get("/atms", async (req, res) => {
     try {
         // fetching ATM data from the API and returning as JSON
-        const data = await fetchFromAPI("atms", req.query);
+        const data = await fetchFromAPI("atms", req.query, );
         res.json(data);
     } catch (error) {
         // error handling for fetch operations
@@ -71,28 +71,28 @@ router.get("/map-locations", (req, res) => {
     res.json(locationData);
 });
 
-// Creating end points for /api/atms/filter
-router.get("/atms/filter", async (req, res) => {
+router.post("/atms/filter", async (req, res) => {
     try {
-        // fetching ATM filters from API and returning as JSON
-        const data = await fetchFromAPI("atms/filter", req.query);
-        res.json(data);
+        // Sending a filtered request to the API and getting the response
+        const filteredAtms = await fetchFromAPI("atms/filter", req.body, 'POST');
+        res.json(filteredAtms);
     } catch (error) {
-        // error handling for fetch operations
+        console.error("Error in /atms/filter route:", error.message);
         res.status(500).send("Error processing request");
     }
 });
 
-// Creating end points for /api/branches/filter
-router.get("/branches/filter", async (req, res) => {
+// Route for getting filtered branches
+router.post("/branches/filter", async (req, res) => {
     try {
-        // fetching branch filters from API and returning as JSON
-        const data = await fetchFromAPI("branches/filter", req.query);
-        res.json(data);
+        // Sending a filtered request to the API and getting the response
+        const filteredBranches = await fetchFromAPI("branches/filter", req.body, 'POST');
+        res.json(filteredBranches);
     } catch (error) {
-        // error handling for fetch operations
+        console.error("Error in /branches/filter route:", error.message);
         res.status(500).send("Error processing request");
     }
 });
+
 
 module.exports = router;
