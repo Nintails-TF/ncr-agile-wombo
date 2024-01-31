@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  fetchFromAPI,
-  formatDataForDisplay,
-  groupAndFormatOpeningHours,
-} = require("./utils");
+const { fetchFromAPI, formatDataForDisplay } = require("./utils");
 
 const axios = require("axios");
 const bodyParser = require("body-parser");
