@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { fetchFromAPI, formatDataForDisplay } = require("./utils");
-const { getCacheKey, getCachedData, setCachedData, withCache } = require('./cacheUtil');
+const { getCachedData, setCachedData, withCache } = require('./cacheUtil');
 
 
 

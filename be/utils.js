@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { getCacheKey, getCachedData, setCachedData } = require('./cacheUtil');
 
 
 const API_BASE_URL = process.env.API_BASE_URL || 'https://wombo-412213.nw.r.appspot.com/api/';
