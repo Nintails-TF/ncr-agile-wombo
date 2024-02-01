@@ -270,9 +270,9 @@
 
   <div
     id="list-view"
-    class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl px-8 py-4 z-10 bg-white overflow-y-auto hidden"
+    class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl py-4 z-10 bg-white overflow-y-auto hidden"
   >
-    <div class="flex pb-2 border-b items-center">
+    <div class="flex pb-2 border-b items-center px-8">
       <h2 class="font-semibold text-xl">Branches & ATMs</h2>
       <div
         class="text-4xl cursor-pointer w-max ml-auto justify-end text-gray-500 hover:text-gray-800"
@@ -319,6 +319,7 @@
             shadowSize: [41, 41]
         });
 
+
           var listViewContainer = document.getElementById("list-view");
 
           // Clear existing content in the list view
@@ -331,7 +332,8 @@
                 data.forEach(branch => {
 
                     var listItem = document.createElement("div");
-                    listItem.classList.add("mt-6", "border-b", "pb-6", "mb-6", "relative");
+                    listItem.classList.add("pt-6", "border-b", "pb-6", "relative", "px-8", "list-item");
+                    listItem.setAttribute('data-marker', branch.name);
 
                     var branchDetails = document.createElement("div");
                     branchDetails.classList.add("lg:grid", "grid-cols-2");
@@ -448,20 +450,7 @@
                     // Create the toMapButton
                     var toMapButton = document.createElement('button');
                     toMapButton.classList.add(
-                        'text-black',
-                        'w-max',
-                        'bg-red-200',
-                        'hover:bg-red-300',
-                        'focus:ring-4',
-                        'focus:outline-none',
-                        'focus:ring-red-100',
-                        'font-medium',
-                        'rounded-lg',
-                        'text-sm',
-                        'px-4',
-                        'py-2',
-                        'right-2',
-                        'ml-auto'
+                      'map-btn'
                     );
                     toMapButton.innerHTML = 'Open in Google Maps';
 
@@ -471,7 +460,27 @@
                         window.open(googleMapsUrl, '_blank');
                     });
                     detailsColumn.appendChild(toMapButton);
-                    marker.bindPopup('<b>' + branch.type + '</b>' + ' - ' + branch.name);
+
+                    marker.addEventListener('click', function(){
+                      listView = document.getElementById("list-view");
+                      if (listView.classList.contains("hidden")) {
+                        toggleListView();
+                      }
+
+                      var listItems = document.querySelectorAll('.list-item');
+
+                      // Remove the 'selected' class from all list items
+                      listItems.forEach(item => {
+                          item.classList.remove('selected');
+                      });
+
+                      var listItem = document.querySelector('[data-marker="' + branch.name + '"]');
+
+                      if (listItem){
+                        listItem.classList.add('selected');
+                        listItem.scrollIntoView({behavior:'smooth'});
+                      }
+                    })
                 })
             })
             .catch((error) => console.error("Error fetching data:", error));
