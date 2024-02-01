@@ -129,7 +129,9 @@ router.post("/branches/filter", async (req, res) => {
 
   const filteredBranches = await axios(filterBranchesConfig);
 
-  res.json(filteredBranches.data);
+  const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
+
+  res.json(formattedBranches);
 });
 
 module.exports = router;
