@@ -193,14 +193,6 @@
 				/><label for="automatic_doors">Automatic Doors</label>
 			</div>
 			</div>
-			<div>
-			<h4 class="font-medium mt-4 lg:mt-0">Services</h4>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="wifi" id="wifi" /><label for="wifi"
-				>Wi-Fi</label
-				>
-			</div>
-			</div>
 		</div>
 		</div>
 
@@ -273,18 +265,13 @@
 		</div>
 	</div>
 
-	<div
-		id="list-view"
-		class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl py-4 z-10 bg-white overflow-y-auto hidden"
-	>
+	<div id="list-view" class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl py-4 z-10 bg-white overflow-y-auto hidden">
 		<div class="flex pb-2 border-b items-center px-8">
-		<h2 class="font-semibold text-xl">Branches & ATMs</h2>
-		<div
-			class="text-4xl cursor-pointer w-max ml-auto justify-end text-gray-500 hover:text-gray-800"
-			onclick="toggleListView()"
-		>
-			&times;
+			<h2 class="font-semibold text-xl">Branches & ATMs</h2>
+			<div class="text-4xl cursor-pointer w-max ml-auto justify-end text-gray-500 hover:text-gray-800" onclick="toggleListView()">&times;</div>
 		</div>
+		<div id="list-contents">
+
 		</div>
 	</div>
 
@@ -297,6 +284,13 @@
 
 	<script>
 		var map;
+		var markers = [];
+
+		function removeMarkers(){
+			markers.forEach(function (marker) {
+				map.removeLayer(marker);
+			});
+		}
 
 		function initializeMap(latitude, longitude) {
 			try {
@@ -367,6 +361,11 @@
 			const filterData = {};
 			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
+			listContents = document.getElementById('list-contents');
+			listContents.innerHTML = '';
+
+			removeMarkers();
+
 			checkboxes.forEach(checkbox => {
 				if (checkbox.checked){
 					if (!filterData["Accessibility"]){
@@ -408,7 +407,7 @@
 				const response = await fetch("http://localhost:3000/branches/filter", request);
 				const data = await response.json();
 				console.log(data); // Handle the response data as needed
-				var listViewContainer = document.getElementById("list-view");
+				var listViewContainer = document.getElementById("list-contents");
 
 				data.forEach(branch => {
 
@@ -512,6 +511,7 @@
 							latitude,
 							longitude
 						], {icon: greyIcon}).addTo(map);
+						markers.push(marker);
 					}
 				} else {
 					if (longitude || latitude != undefined){
@@ -519,6 +519,7 @@
 							latitude,
 							longitude
 						]).addTo(map);
+						markers.push(marker);
 					}
 				}
 				// Create the toMapButton
