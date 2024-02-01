@@ -64,3 +64,11 @@ h1.title {
 #list-view.visible {
     transform: translateX(0);
 }
+
+.list-item.selected {
+    @apply bg-[#E0F2F1]
+}
+
+.map-btn {
+    @apply text-black w-max bg-red-200 hover:bg-red-300 focus:ring-4 focus:outline-none focus:ring-red-100 font-medium rounded-lg text-sm px-4 py-2 right-2 ml-auto h-max
+}
