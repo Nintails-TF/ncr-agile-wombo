@@ -122,7 +122,7 @@
 		style="border-bottom: 1px solid #e5e7eb"
 		>
 		<h3 class="font-medium">Branch Filters</h3>
-		<div class="lg:grid grid-cols-3 mt-2">
+		<div class="lg:grid grid-cols-2 mt-2">
 			<div>
 			<h4 class="font-medium">Opening Times</h4>
 			<div class="flex items-center gap-x-2">
@@ -198,7 +198,7 @@
 
 		<div id="atm-filters">
 		<h3 class="font-medium mt-4">ATM Filters</h3>
-		<div class="lg:grid grid-cols-3 mt-2">
+		<div class="lg:grid grid-cols-2 mt-2">
 			<div>
 			<h4 class="font-medium">Accessibility</h4>
 			<div class="flex items-center gap-x-2">
@@ -206,6 +206,7 @@
 				type="checkbox"
 				name="wheelchair_access_atm"
 				id="wheelchair_access_atm"
+				onclick="submitFilter()"
 				/><label for="wheelchair_access_atm">Wheelchair Access</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -213,6 +214,7 @@
 				type="checkbox"
 				name="audio_cash_machine"
 				id="audio_cash_machine"
+				onclick="submitFilter()"
 				/><label for="audio_cash_machine">Audio Cash Machine</label>
 			</div>
 			</div>
@@ -223,6 +225,7 @@
 				type="checkbox"
 				name="cash_withdrawl"
 				id="cash_withdrawl"
+				onclick="submitFilter()"
 				/><label for="cash_withdrawl">Cash Withdrawl</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -230,6 +233,7 @@
 				type="checkbox"
 				name="cash_deposits"
 				id="cash_deposits"
+				onclick="submitFilter()"
 				/><label for="cash_deposits">Cash Deposits</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -243,21 +247,13 @@
 				type="checkbox"
 				name="cheque_deposits"
 				id="cheque_deposits"
+				onclick="submitFilter()"
 				/><label for="cheque_deposits">Cheque Deposits</label>
 			</div>
 			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="balance" id="balance" /><label
+				<input type="checkbox" name="balance" id="balance" onclick="submitFilter()"/><label
 				for="balance"
 				>Balance</label
-				>
-			</div>
-			</div>
-			<div>
-			<h4 class="font-medium mt-4 lg:mt-0"></h4>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="24_hours" id="24_hours" /><label
-				for="24_hours"
-				>24 Hours</label
 				>
 			</div>
 			</div>
@@ -306,15 +302,6 @@
 				var mapLoader = document.getElementById("map-loader");
 				mapLoader.classList.add("hidden");
 				mapLoader.classList.remove("grid");
-				
-				var greyIcon = new L.Icon({
-					iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-					shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-					iconSize: [25, 41],
-					iconAnchor: [12, 41],
-					popupAnchor: [1, -34],
-					shadowSize: [41, 41]
-				});
 
 				submitFilter();
 
@@ -368,19 +355,70 @@
 
 			checkboxes.forEach(checkbox => {
 				if (checkbox.checked){
-					if (!filterData["Accessibility"]){
-						filterData["Accessibility"] = [];
-					}
+					// branch filters
 					if (checkbox.id == "wheelchair_access"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
 						filterData["Accessibility"].push("WheelchairAccess")
 					} else if (checkbox.id == "lower_level_counter"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
 						filterData["Accessibility"].push("LowerLevelCounter")
 					} else if (checkbox.id == "level_access"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
 						filterData["Accessibility"].push("LevelAccess")
 					} else if (checkbox.id == "induction_loop"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
 						filterData["Accessibility"].push("InductionLoop")
 					} else if (checkbox.id == "automatic_doors"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
 						filterData["Accessibility"].push("AutomaticDoors")
+					}
+
+					// atm filters
+					if (checkbox.id == "cash_withdrawl"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["ATMServices"].push("CashWithdrawal");
+					} else if (checkbox.id == "cash_deposits"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["ATMServices"].push("CashDeposits");
+					} else if (checkbox.id == "pin_change"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["ATMServices"].push("PINChange");
+					} else if (checkbox.id == "cheque_deposits"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["ATMServices"].push("ChequeDeposits");
+					} else if (checkbox.id == "balance"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["ATMServices"].push("Balance");
+					} else if (checkbox.id == "wheelchair_access_atm"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["Accessibility"].push("WheelchairAccess");
+					} else if (checkbox.id == "audio_cash_machine"){
+						if (!filterData["Accessibility"]) {
+							filterData["Accessibility"] = [];
+						}
+						filterData["Accessibility"].push("AudioCashMachine");
 					}
 				}
 			})
@@ -403,8 +441,24 @@
 				body: JSON.stringify(filterData),
 			};
 
+			var greyIcon = new L.Icon({
+				iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+				shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+				iconSize: [25, 41],
+				iconAnchor: [12, 41],
+				popupAnchor: [1, -34],
+				shadowSize: [41, 41]
+			});
+
 			try {
-				const response = await fetch("http://localhost:3000/branches/filter", request);
+				for (i = 0; i < 2; i++){
+					if (i == 0){
+						reqType = 'branches';
+					} else {
+						reqType = 'atms';
+					}
+
+				const response = await fetch("http://localhost:3000/"+reqType+"/filter", request);
 				const data = await response.json();
 				console.log(data); // Handle the response data as needed
 				var listViewContainer = document.getElementById("list-contents");
@@ -500,7 +554,7 @@
 					detailsColumn.appendChild(wifi);
 					detailsColumn.appendChild(phone);
 				}
-
+				
 				var longitude = branch.coordinates.Longitude;
 				var latitude = branch.coordinates.Latitude;
 
@@ -569,7 +623,8 @@
 					listItem.scrollIntoView({behavior:'smooth'});
 					}
 				})
-				})
+				})	
+				}
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}

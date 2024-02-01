@@ -104,7 +104,9 @@ router.post("/atms/filter", async (req, res) => {
 
   const filteredAtms = await axios(filterATMsConfig);
 
-  res.json(filteredAtms.data);
+  const formattedAtms = formatDataForDisplay(filteredAtms.data, true);
+
+  res.json(formattedAtms);
 });
 
 // Route for getting filtered branches
