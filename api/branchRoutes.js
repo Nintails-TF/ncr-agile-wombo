@@ -24,25 +24,15 @@ router.get("/api/branches", async (req, res) => {
 
 router.post("/api/branches/filter", async (req, res) => {
   try {
-    const atms = await db
+    const branches = await db
       .collection("Branches")
       .find({
-        Accessibility: {
-          $all: req.body.Accessibility
-            ? req.body.Accessibility
-            : [
-                "WheelchairAccess",
-                "LowerLevelCounter",
-                "LevelAccess",
-                "InductionLoop",
-                "AutomaticDoors",
-              ],
-        },
-        ServiceAndFacility: {
-          $all: req.body.ServiceAndFacility
-            ? req.body.ServiceAndFacility
-            : ["WiFi"],
-        },
+        Accessibility: req.body.Accessibility
+          ? { $all: req.body.Accessibility }
+          : { $exists: true, $ne: null },
+        ServiceAndFacility: req.body.ServiceAndFacility
+          ? { $all: req.body.ServiceAndFacility }
+          : { $exists: true, $ne: null },
         $and: [
           {
             $expr: {
@@ -91,7 +81,7 @@ router.post("/api/branches/filter", async (req, res) => {
         ],
       })
       .toArray();
-    res.json(atms);
+    res.json(branches);
   } catch (error) {
     handleError(res, error);
   }
