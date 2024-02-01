@@ -1,0 +1,32 @@
+name: Unified CI/CD Workflow
+
+on:
+  push:
+    branches: [ main, dev, FE/**, BE/**, API/** ]
+  pull_request:
+    branches: [ main, dev, FE/**, BE/**, API/** ]
+
+jobs:
+  BE-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '19.9.0'
+    - name: Change to BE directory
+      run: cd be
+    - name: Install BE dependencies
+      run: npm install
+      working-directory: be
+    - name: Run ESLint in BE
+      run: npm run lint
+      working-directory: be
+    - name: Run Tests in BE
+      run: npm test
+      working-directory: be
+    - name: Build BE
+      run: npm run build
+      working-directory: be
