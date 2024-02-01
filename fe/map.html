@@ -456,9 +456,12 @@
 
                     // Add a click event listener to open Google Maps with the specific latitude and longitude
                     toMapButton.addEventListener('click', function () {
-                        var googleMapsUrl = 'https://www.google.com/maps?q=' + latitude + ',' + longitude;
+                        var address = branch.address; // Assuming `branch.address` contains the full address
+                        var encodedAddress = encodeURIComponent(address); // Encode the address to ensure it's URL-friendly
+                        var googleMapsUrl = 'https://www.google.com/maps?q=' + encodedAddress;
                         window.open(googleMapsUrl, '_blank');
                     });
+
                     detailsColumn.appendChild(toMapButton);
 
                     marker.addEventListener('click', function(){
