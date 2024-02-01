@@ -456,9 +456,23 @@
 
                     // Add a click event listener to open Google Maps with the specific latitude and longitude
                     toMapButton.addEventListener('click', function () {
-                        var googleMapsUrl = 'https://www.google.com/maps?q=' + latitude + ',' + longitude;
+                        var query; // Initialize query variable
+                        if (branch.type === 'ATM') {
+                            // For ATMs, use only the address
+                            query = branch.address;
+                        } else {
+                            // For branches, use the branch name and address for specificity
+                            query = "Santander Branch " + branch.address; 
+                        }
+
+                        var encodedQuery = encodeURIComponent(query); // Encode the query for URL
+                        var googleMapsUrl = 'https://www.google.com/maps?q=' + encodedQuery;
                         window.open(googleMapsUrl, '_blank');
                     });
+
+
+
+
                     detailsColumn.appendChild(toMapButton);
 
                     marker.addEventListener('click', function(){
