@@ -103,18 +103,6 @@
 			id="radius-range"
 			/><span id="radius"></span>
 		</div>
-		<div class="ml-auto">
-			<select
-			id="filter-type"
-			name="type"
-			class="block text-sm mt-4 lg:mt-0 w-full lg:w-max"
-			onchange="updateFilters()"
-			>
-			<option selected value="branches_atms">Branches & ATMs</option>
-			<option value="branches">Branches</option>
-			<option value="atms">ATMs</option>
-			</select>
-		</div>
 		</div>
 		<div
 		id="branch-filters"
@@ -124,33 +112,6 @@
 		<h3 class="font-medium">Branch Filters</h3>
 		<div class="lg:grid grid-cols-2 mt-2">
 			<div>
-			<h4 class="font-medium">Opening Times</h4>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="morning" id="morning" /><label
-				for="morning"
-				>Morning</label
-				>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="afternoon" id="afternoon" /><label
-				for="afternoon"
-				>Afternoon</label
-				>
-			</div>
-			<div class="flex items-center gap-x-2 mt-4">
-				<input type="checkbox" name="saturdays" id="saturdays" /><label
-				for="saturdays"
-				>Open on Saturdays</label
-				>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="sundays" id="sundays" /><label
-				for="sundays"
-				>Open on Sundays</label
-				>
-			</div>
-			</div>
-			<div>
 			<h4 class="font-medium mt-4 lg:mt-0">Accessibility</h4>
 			<div class="flex items-center gap-x-2">
 				<input
@@ -158,6 +119,9 @@
 				name="wheelchair_access"
 				id="wheelchair_access"
 				onclick="submitFilter()"
+				data-category="branch"
+				data-heading="Accessibility"
+				data-title="WheelchairAccess"
 				/><label for="wheelchair_access">Wheelchair Access</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -165,6 +129,9 @@
 				type="checkbox"
 				name="lower_level_counter"
 				id="lower_level_counter"
+				data-category="branch"
+				data-heading="Accessibility"
+				data-title="LowerLevelCounter"
 				onclick="submitFilter()"
 				/><label for="lower_level_counter">Lower-Level Counter</label>
 			</div>
@@ -174,6 +141,9 @@
 				name="level_access"
 				id="level_access"
 				onclick="submitFilter()"
+				data-category="branch"
+				data-heading="Accessibility"
+				data-title="LevelAccess"
 				/><label for="level_access">Level Access</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -182,6 +152,9 @@
 				name="induction_loop"
 				id="induction_loop"
 				onclick="submitFilter()"
+				data-category="branch"
+				data-heading="Accessibility"
+				data-title="InductionLoop"
 				/><label for="induction_loop">Induction Loop</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -190,6 +163,9 @@
 				name="automatic_doors"
 				id="automatic_doors"
 				onclick="submitFilter()"
+				data-category="branch"
+				data-heading="Accessibility"
+				data-title="AutomaticDoors"
 				/><label for="automatic_doors">Automatic Doors</label>
 			</div>
 			</div>
@@ -207,6 +183,9 @@
 				name="wheelchair_access_atm"
 				id="wheelchair_access_atm"
 				onclick="submitFilter()"
+				data-category="atm"
+				data-heading="Accessibility"
+				data-title="WheelchairAccess"
 				/><label for="wheelchair_access_atm">Wheelchair Access</label>
 			</div>
 			<div class="flex items-center gap-x-2">
@@ -215,6 +194,9 @@
 				name="audio_cash_machine"
 				id="audio_cash_machine"
 				onclick="submitFilter()"
+				data-category="atm"
+				data-heading="Accessibility"
+				data-title="AudioCashMachine"
 				/><label for="audio_cash_machine">Audio Cash Machine</label>
 			</div>
 			</div>
@@ -226,7 +208,10 @@
 				name="cash_withdrawl"
 				id="cash_withdrawl"
 				onclick="submitFilter()"
-				/><label for="cash_withdrawl">Cash Withdrawl</label>
+				data-category="atm"
+				data-heading="ATMServices"
+				data-title="CashWithdrawal"
+				/><label for="cash_withdrawl">Cash Withdrawal</label>
 			</div>
 			<div class="flex items-center gap-x-2">
 				<input
@@ -234,10 +219,13 @@
 				name="cash_deposits"
 				id="cash_deposits"
 				onclick="submitFilter()"
+				data-category="atm"
+				data-heading="ATMServices"
+				data-title="CashDeposits"
 				/><label for="cash_deposits">Cash Deposits</label>
 			</div>
 			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="pin_change" id="pin_change" /><label
+				<input type="checkbox" name="pin_change" id="pin_change" data-category="atm" data-heading="ATMServices" data-title="PINChange"/><label
 				for="pin_change"
 				>PIN Change</label
 				>
@@ -248,10 +236,13 @@
 				name="cheque_deposits"
 				id="cheque_deposits"
 				onclick="submitFilter()"
+				data-category="atm"
+				data-heading="ATMServices"
+				data-title="ChequeDeposits"
 				/><label for="cheque_deposits">Cheque Deposits</label>
 			</div>
 			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="balance" id="balance" onclick="submitFilter()"/><label
+				<input type="checkbox" name="balance" id="balance" onclick="submitFilter()" data-category="atm" data-heading="ATMServices" data-title="Balance"/><label
 				for="balance"
 				>Balance</label
 				>
@@ -352,79 +343,35 @@
 			listContents.innerHTML = '';
 
 			removeMarkers();
+			
+			branchOpts = document.querySelectorAll('input[data-category="branch"]');
+			atmOpts = document.querySelectorAll('input[data-category="atm"]');
 
 			checkboxes.forEach(checkbox => {
 				if (checkbox.checked){
-					// branch filters
-					if (checkbox.id == "wheelchair_access"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
+					branchOpts.forEach(opt => {
+						if (checkbox.id == opt.id){
+							if (!filterData[opt.getAttribute('data-heading')]){
+								filterData[opt.getAttribute('data-heading')] = [];
+							}
+							filterData[opt.getAttribute('data-heading')].push(opt.getAttribute('data-title'));
 						}
-						filterData["Accessibility"].push("WheelchairAccess")
-					} else if (checkbox.id == "lower_level_counter"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["Accessibility"].push("LowerLevelCounter")
-					} else if (checkbox.id == "level_access"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["Accessibility"].push("LevelAccess")
-					} else if (checkbox.id == "induction_loop"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["Accessibility"].push("InductionLoop")
-					} else if (checkbox.id == "automatic_doors"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["Accessibility"].push("AutomaticDoors")
-					}
 
-					// atm filters
-					if (checkbox.id == "cash_withdrawl"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
+					})
+
+					atmOpts.forEach(opt => {
+						if (checkbox.id == opt.id){
+							if (!filterData[opt.getAttribute('data-heading')]){
+								filterData[opt.getAttribute('data-heading')] = [];
+							}
+							filterData[opt.getAttribute('data-heading')].push(opt.getAttribute('data-title'));
 						}
-						filterData["ATMServices"].push("CashWithdrawal");
-					} else if (checkbox.id == "cash_deposits"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["ATMServices"].push("CashDeposits");
-					} else if (checkbox.id == "pin_change"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["ATMServices"].push("PINChange");
-					} else if (checkbox.id == "cheque_deposits"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["ATMServices"].push("ChequeDeposits");
-					} else if (checkbox.id == "balance"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["ATMServices"].push("Balance");
-					} else if (checkbox.id == "wheelchair_access_atm"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["Accessibility"].push("WheelchairAccess");
-					} else if (checkbox.id == "audio_cash_machine"){
-						if (!filterData["Accessibility"]) {
-							filterData["Accessibility"] = [];
-						}
-						filterData["Accessibility"].push("AudioCashMachine");
-					}
+					})
 				}
 			})
 
-			filterData["Longitude"] = -2.970721;
-			filterData["Latitude"] = 53.409532;
+			filterData["Longitude"] = -2.971743;
+			filterData["Latitude"] = 56.461590;
 			filterData["Radius"] = 5000;
 
 			console.log(filterData);
@@ -658,24 +605,6 @@
 				setTimeout(function () {
 				filterBox.classList.add("hidden");
 				}, 300); // Delay the addition of 'hidden' class to allow the animation to complete
-			}
-		}
-
-		function updateFilters() {
-			filterType = document.getElementById("filter-type");
-			atmFilters = document.getElementById("atm-filters");
-			branchFilters = document.getElementById("branch-filters");
-			if (filterType.value == "branches") {
-				atmFilters.classList.add("hidden");
-				branchFilters.classList.remove("hidden");
-				branchFilters.style.borderBottom = "0px";
-			} else if (filterType.value == "atms") {
-				branchFilters.classList.add("hidden");
-				atmFilters.classList.remove("hidden");
-			} else {
-				atmFilters.classList.remove("hidden");
-				branchFilters.classList.remove("hidden");
-				branchFilters.style.borderBottom = "1px solid #E5E7EB";
 			}
 		}
 
