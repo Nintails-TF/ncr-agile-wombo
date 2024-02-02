@@ -489,8 +489,10 @@
 					'py-2',
 					'right-2',
 					'ml-auto',
+					'h-max'
 				);
                     toMapButton.innerHTML = 'Open in Google Maps';
+					toMapButton.style.setProperty('height', 'max-content', 'important')
 
                     // Add a click event listener to open Google Maps with the specific latitude and longitude
                     toMapButton.addEventListener('click', function () {
