@@ -24,14 +24,6 @@ router.get("/api/atms", async (req, res) => {
 
 router.post("/api/atms/filter", async (req, res) => {
   try {
-    const defaultAccessibility = ["AudioCashMachine", "WheelchairAccess"];
-    const defaultATMServices = [
-      "CashWithdrawal",
-      "CashDeposits",
-      "PINChange",
-      "ChequeDeposits",
-      "Balance",
-    ];
 
     const atms = await db
       .collection("ATMs")
