@@ -106,8 +106,12 @@ router.post("/atms/filter", async (req, res) => {
             headers: { "Content-Type": "application/json" }
         };
 
-        const data = await withCache(fetchFromAPI, "atms/filter", requestData, 'POST');
-        res.json(data);
+        const filteredAtms = await axios(filterATMsConfig);
+
+        const formattedAtms = formatDataForDisplay(filteredAtms.data, true);
+
+        res.json(formattedAtms);
+
     } catch (error) {
         console.error("Error in /atms/filter route:", error.message);
         res.status(500).send("Error processing request");
@@ -158,11 +162,11 @@ router.post("/branches/filter", async (req, res) => {
             return response.data;
         }, "branches/filter", branchFilterCriteria, 'POST');
 
-        res.json(data);
-    } catch (error) {
-        console.error("Error in /branches/filter route:", error.message);
-        res.status(500).send("Error processing request");
-    }
+  const filteredBranches = await axios(filterBranchesConfig);
+
+  const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
+
+  res.json(formattedBranches);
 });
 
 
