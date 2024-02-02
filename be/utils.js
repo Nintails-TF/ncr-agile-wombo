@@ -1,32 +1,26 @@
 const axios = require('axios');
 
-
 const API_BASE_URL = process.env.API_BASE_URL || 'https://wombo-412213.nw.r.appspot.com/api/';
 
-// General function to handle API requests
-async function fetchFromAPI(endpoint, requestData, method = 'GET') {
+// Modified function to handle both GET and POST requests
+async function fetchFromAPI(endpoint, data, method = 'GET') {
     try {
         let response;
-
-        const url = `${API_BASE_URL}${endpoint}`;
-        const config = {
-            timeout: 5000,
-            headers: requestData.headers || {}, // Custom headers if provided
-        };
-
         if (method === 'GET') {
-            // Performing a GET request
-            config.params = requestData.params;
-            response = await axios.get(url, config);
+            response = await axios.get(`${API_BASE_URL}${endpoint}`, {
+                params: data,
+                timeout: 5000
+            });
         } else if (method === 'POST') {
-            // Performing a POST request
-            response = await axios.post(url, requestData.body, config);
+            response = await axios.post(`${API_BASE_URL}${endpoint}`, data, {
+                timeout: 5000
+            });
         }
 
         if (response && response.data) {
             return response.data;
         } else {
-            throw new Error('Unexpected response format or no data');
+            throw new Error('Unexpected response format');
         }
     } catch (error) {
         console.error(`API request error for ${endpoint}:`, error.message);

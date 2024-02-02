@@ -45,12 +45,12 @@ app.get("/", (req, res) => {
 });
 
 // 404 Error Handler (for any unhandled routes)
-app.use((req, res) => {
+app.use((req, res, next) => {
     res.status(404).send("Resource not found");
 });
 
 // Generic Error Handler
-app.use((error, req, res) => {
+app.use((error, req, res, next) => {
     console.error(error.stack);
     res.status(500).send('Something broke!');
 });
