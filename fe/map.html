@@ -63,7 +63,7 @@
 
 	<div
 		id="filter-box"
-		class="absolute w-full lg:!w-2/3 2xl:!w-1/2 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl"
+		class="absolute w-full lg:!w-2/3 2xl:!w-1/3 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl"
 		style="z-index: 10"
 	>
 		<div
@@ -73,7 +73,7 @@
 		>
 		<h3 class="font-medium">Branch Filters</h3>
 		<div class="lg:grid grid-cols-2 mt-2">
-			<div>
+			<div class="lg:col-start-2">
 			<h4 class="font-medium mt-4 lg:mt-0">Accessibility</h4>
 			<div class="flex items-center gap-x-2">
 				<input
@@ -474,7 +474,7 @@
 					'px-4',
 					'py-2',
 					'right-2',
-					'ml-auto'
+					'ml-auto',
 				);
 				toMapButton.innerHTML = 'Open in Google Maps'
 
