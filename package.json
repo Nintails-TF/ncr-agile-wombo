@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node be/server.js"
+    "start": "node be/server.js",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +17,10 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.6.0",
+    "@commitlint/config-conventional": "^18.6.0",
+    "husky": "^8.0.0"
   }
 }
