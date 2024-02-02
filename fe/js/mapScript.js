@@ -29,7 +29,9 @@ function initializeMap(latitude, longitude) {
     mapElement.innerHTML = "<p>There was an error loading the map</p>";
     }
 }
-
+/*
+* Checks for the geolocation
+*/
 if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition((position) => {
         initializeMap(position.coords.latitude, position.coords.longitude);
