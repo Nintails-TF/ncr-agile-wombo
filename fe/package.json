@@ -1,11 +1,13 @@
 {
   "scripts": {
-    "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --minify"
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --minify",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "tailwindcss": "^3.3.5"
   },
   "dependencies": {
+    "eslint": "^8.56.0",
     "flowbite": "^2.2.1"
   }
 }
