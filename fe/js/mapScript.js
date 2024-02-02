@@ -35,7 +35,9 @@ if ("geolocation" in navigator) {
         initializeMap(position.coords.latitude, position.coords.longitude);
     })
 }
-
+/*
+*Using checkbox elements we can filter the results by interacting with the API.
+*/
 function submitFilter(){
     const filterData = {};
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -47,7 +49,6 @@ function submitFilter(){
     
     branchOpts = document.querySelectorAll('input[data-category="branch"]');
     atmOpts = document.querySelectorAll('input[data-category="atm"]');
-
     checkboxes.forEach(checkbox => {
         if (checkbox.checked){
             branchOpts.forEach(opt => {
@@ -98,6 +99,9 @@ async function filterBranches(filterData){
         shadowSize: [41, 41]
     });
 
+    /*
+    * Calling the endpoint for branch and atm filter.
+    */
     try {
         for (i = 0; i < 2; i++){
             if (i == 0){
@@ -277,7 +281,9 @@ async function filterBranches(filterData){
         console.error("Error fetching data:", error);
     }
 }
-
+    /*
+    *  Makes the list view visible/hidden when interacted with
+    */
 function toggleListView() {
     listView = document.getElementById("list-view");
     if (listView.classList.contains("hidden")) {
@@ -292,6 +298,10 @@ function toggleListView() {
         }, 300);
     }
 }
+
+    /*
+    * Makes the filter box visible/hidden when interacted with
+    */
 
 function toggleFilterBox() {
     filterBox = document.getElementById("filter-box");
