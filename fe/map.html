@@ -401,7 +401,21 @@
 					openingHours.classList.add("lg:font-medium", "text-sm", "lg:text-base");
 
 					var openHoursText = branch.openingHours || "Opening hours not available";
-					openingHours.innerHTML = openHoursText.replace(/;/g, '<br>');
+					var formattedOpeningHours = openHoursText.replace(/;/g, '<br>');
+
+					// Check if Sunday has the special case 00:00 - 00:00
+					if (formattedOpeningHours.includes("Sunday 00:00 - 00:00")) {
+						// Remove the Sunday entry
+						formattedOpeningHours = formattedOpeningHours.replace("Sunday 00:00 - 00:00", "");
+					}
+					// Check if Sunday has the special case 00:00 - 00:00
+					if (formattedOpeningHours.includes("Saturday 00:00 - 00:00")) {
+						// Remove the Sunday entry
+						formattedOpeningHours = formattedOpeningHours.replace("Saturday 00:00 - 00:00", "");
+					}
+
+					openingHours.innerHTML = formattedOpeningHours;
+
 
 					var branchServices = document.createElement("div");
 					branchServices.classList.add("flex", "items-center", "gap-x-2");
