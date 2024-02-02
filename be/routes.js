@@ -119,7 +119,7 @@ router.post("/atms/filter", async (req, res) => {
 });
 
 
-router.post("/branches/filter", async (req, res) => {
+/*router.post("/branches/filter", async (req, res) => {
     try {
         const branchFilterCriteria = {
             Accessibility: req.body.Accessibility,
@@ -140,7 +140,7 @@ router.post("/branches/filter", async (req, res) => {
         console.error("Error in /branches/filter route:", error.message);
         res.status(500).send("Error processing request");
     }
-});
+});*/
 
 
 
@@ -161,12 +161,14 @@ router.post("/branches/filter", async (req, res) => {
             const response = await axios(createFilterConfig("branches/filter", branchFilterCriteria));
             return response.data;
         }, "branches/filter", branchFilterCriteria, 'POST');
+    } catch (error) {
+        const filteredBranches = await axios(filterBranchesConfig);
 
-  const filteredBranches = await axios(filterBranchesConfig);
+        const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
 
-  const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
-
-  res.json(formattedBranches);
+        res.json(formattedBranches);
+    }
+  
 });
 
 
