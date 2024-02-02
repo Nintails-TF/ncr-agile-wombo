@@ -27,30 +27,15 @@ router.post("/api/atms/filter", async (req, res) => {
     const atms = await db
       .collection("ATMs")
       .find({
-        Accessibility: {
-          $all: req.body.Accessibility
-            ? req.body.Accessibility
-            : ["AudioCashMachine", "WheelchairAccess"],
+        Accessibility: req.body.Accessibility
+          ? { $all: req.body.Accessibility }
+          : { $exists: true, $ne: null },
+        ATMServices: req.body.ATMServices
+          ? { $all: req.body.ATMServices }
+          : { $exists: true, $ne: null },
+        Access24HoursIndicator: {
+          $in: [req.body.Access24HoursIndicator, true, false],
         },
-        ATMServices: {
-          $all: req.body.ATMServices,
-        },
-        ATMServices: {
-          $all: req.body.ATMServices
-            ? req.body.ATMServices
-            : [
-                "CashWithdrawal",
-                "CashDeposits",
-                "PINChange",
-                "ChequeDeposits",
-                "Balance",
-              ],
-        },
-        Access24HoursIndicator: req.body.Access24HoursIndicator
-          ? req.body.Access24HoursIndicator
-          : {
-              $in: [true, false],
-            },
         $and: [
           {
             $expr: {
@@ -65,12 +50,12 @@ router.post("/api/atms/filter", async (req, res) => {
           },
           {
             $expr: {
-              $lt: [
-                req.body.Latitude - req.body.Radius / 111,
+              $gt: [
                 {
                   $toDouble:
                     "$Location.PostalAddress.GeoLocation.GeographicCoordinates.Latitude",
                 },
+                req.body.Latitude - req.body.Radius / 111,
               ],
             },
           },
@@ -87,12 +72,12 @@ router.post("/api/atms/filter", async (req, res) => {
           },
           {
             $expr: {
-              $lt: [
-                req.body.Longitude - req.body.Radius / 111,
+              $gt: [
                 {
                   $toDouble:
                     "$Location.PostalAddress.GeoLocation.GeographicCoordinates.Longitude",
                 },
+                req.body.Longitude - req.body.Radius / 111,
               ],
             },
           },

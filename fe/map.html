@@ -1,573 +1,637 @@
-	<!DOCTYPE html>
-	<head>
-	<link rel="stylesheet" href="dist/style.css" />
-	<link
-		rel="stylesheet"
-		href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-		crossorigin=""
-	/>
-	<link
-		href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css"
-		rel="stylesheet"
-	/>
-	<script
-		src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-		crossorigin=""
-	></script>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"
-		rel="stylesheet"
-	/>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-	<script
-		src="https://kit.fontawesome.com/e5f42946b2.js"
-		crossorigin="anonymous"
-	></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>NCR Branches & ATMs</title>
-	</head>
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="dist/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css"
+    rel="stylesheet"
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+  <script
+    src="https://kit.fontawesome.com/e5f42946b2.js"
+    crossorigin="anonymous"
+  ></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCR Branches & ATMs</title>
+</head>
 
-	<body>
-	<div class="relative" style="z-index: 20">
-		<div
-		class="absolute inset-y-0 start-8 flex items-center ps-3 pointer-events-none"
-		>
-		</div>
-		<div
-		class="block w-full py-4 pr-4 text-sm text-center text-gray-900 border border-gray-300 bg-gray-50 font-semibold">NCR Atleos</div>
-		<div
-		id="filter-btn"
-		class="absolute end-2.5 bottom-2.5 rounded-full"
-		onclick="toggleFilterBox()"
-		>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 24 24"
-			class="h-8 cursor-pointer"
-		>
-			<path
-			d="M12,7a2,2,0,1,0-2-2A2,2,0,0,0,12,7Zm0,10a2,2,0,1,0,2,2A2,2,0,0,0,12,17Zm0-7a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z"
-			></path>
-		</svg>
-		</div>
-		<i
-		id="list-btn"
-		class="fa-solid fa-list-ul text-[#808080] hover:text-[#4D4D4D] transition duration-75 cursor-pointer absolute text-xl bottom-4 left-2.5"
-		onclick="toggleListView()"
-		></i>
-	</div>
+<body>
+  <div class="relative" style="z-index: 20">
+    <div
+      class="absolute inset-y-0 start-8 flex items-center ps-3 pointer-events-none"
+    ></div>
+    <div
+      class="block w-full py-4 pr-4 text-sm text-center text-gray-900 border border-gray-300 bg-gray-50 font-semibold"
+    >
+      NCR Atleos
+    </div>
+    <div
+      id="filter-btn"
+      class="absolute end-2.5 bottom-2.5 rounded-full"
+      onclick="toggleFilterBox()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="h-8 cursor-pointer"
+      >
+        <path
+          d="M12,7a2,2,0,1,0-2-2A2,2,0,0,0,12,7Zm0,10a2,2,0,1,0,2,2A2,2,0,0,0,12,17Zm0-7a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z"
+        ></path>
+      </svg>
+    </div>
+    <i
+      id="list-btn"
+      class="fa-solid fa-list-ul text-[#808080] hover:text-[#4D4D4D] transition duration-75 cursor-pointer absolute text-xl bottom-4 left-2.5"
+      onclick="toggleListView()"
+    ></i>
+  </div>
 
-	<div
-		id="filter-box"
-		class="absolute w-full lg:!w-2/3 2xl:!w-1/3 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl"
-		style="z-index: 10"
-	>
-		<div
-		id="branch-filters"
-		class="pb-4"
-		style="border-bottom: 1px solid #e5e7eb"
-		>
-		<h3 class="font-medium">Branch Filters</h3>
-		<div class="lg:grid grid-cols-2 mt-2">
-			<div class="lg:col-start-2">
-			<h4 class="font-medium mt-4 lg:mt-0">Accessibility</h4>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="wheelchair_access"
-				id="wheelchair_access"
-				onclick="submitFilter()"
-				data-category="branch"
-				data-heading="Accessibility"
-				data-title="WheelchairAccess"
-				/><label for="wheelchair_access">Wheelchair Access</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="lower_level_counter"
-				id="lower_level_counter"
-				data-category="branch"
-				data-heading="Accessibility"
-				data-title="LowerLevelCounter"
-				onclick="submitFilter()"
-				/><label for="lower_level_counter">Lower-Level Counter</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="level_access"
-				id="level_access"
-				onclick="submitFilter()"
-				data-category="branch"
-				data-heading="Accessibility"
-				data-title="LevelAccess"
-				/><label for="level_access">Level Access</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="induction_loop"
-				id="induction_loop"
-				onclick="submitFilter()"
-				data-category="branch"
-				data-heading="Accessibility"
-				data-title="InductionLoop"
-				/><label for="induction_loop">Induction Loop</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="automatic_doors"
-				id="automatic_doors"
-				onclick="submitFilter()"
-				data-category="branch"
-				data-heading="Accessibility"
-				data-title="AutomaticDoors"
-				/><label for="automatic_doors">Automatic Doors</label>
-			</div>
-			</div>
-		</div>
-		</div>
+  <div
+    id="filter-box"
+    class="absolute w-full lg:!w-2/3 2xl:!w-1/3 right-0 bg-white shadow-2xl hidden px-12 py-4 rounded-bl-2xl"
+    style="z-index: 10"
+  >
+    <div
+      id="branch-filters"
+      class="pb-4"
+      style="border-bottom: 1px solid #e5e7eb"
+    >
+      <h3 class="font-medium">Branch Filters</h3>
+      <div class="lg:grid grid-cols-2 mt-2">
+        <div class="lg:col-start-2">
+          <h4 class="font-medium mt-4 lg:mt-0">Accessibility</h4>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="wheelchair_access"
+              id="wheelchair_access"
+              onclick="submitFilter()"
+              data-category="branch"
+              data-heading="Accessibility"
+              data-title="WheelchairAccess"
+            /><label for="wheelchair_access">Wheelchair Access</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="lower_level_counter"
+              id="lower_level_counter"
+              data-category="branch"
+              data-heading="Accessibility"
+              data-title="LowerLevelCounter"
+              onclick="submitFilter()"
+            /><label for="lower_level_counter">Lower-Level Counter</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="level_access"
+              id="level_access"
+              onclick="submitFilter()"
+              data-category="branch"
+              data-heading="Accessibility"
+              data-title="LevelAccess"
+            /><label for="level_access">Level Access</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="induction_loop"
+              id="induction_loop"
+              onclick="submitFilter()"
+              data-category="branch"
+              data-heading="Accessibility"
+              data-title="InductionLoop"
+            /><label for="induction_loop">Induction Loop</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="automatic_doors"
+              id="automatic_doors"
+              onclick="submitFilter()"
+              data-category="branch"
+              data-heading="Accessibility"
+              data-title="AutomaticDoors"
+            /><label for="automatic_doors">Automatic Doors</label>
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<div id="atm-filters">
-		<h3 class="font-medium mt-4">ATM Filters</h3>
-		<div class="lg:grid grid-cols-2 mt-2">
-			<div>
-			<h4 class="font-medium">Accessibility</h4>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="wheelchair_access_atm"
-				id="wheelchair_access_atm"
-				onclick="submitFilter()"
-				data-category="atm"
-				data-heading="Accessibility"
-				data-title="WheelchairAccess"
-				/><label for="wheelchair_access_atm">Wheelchair Access</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="audio_cash_machine"
-				id="audio_cash_machine"
-				onclick="submitFilter()"
-				data-category="atm"
-				data-heading="Accessibility"
-				data-title="AudioCashMachine"
-				/><label for="audio_cash_machine">Audio Cash Machine</label>
-			</div>
-			</div>
-			<div>
-			<h4 class="font-medium mt-4 lg:mt-0">Services</h4>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="cash_withdrawl"
-				id="cash_withdrawl"
-				onclick="submitFilter()"
-				data-category="atm"
-				data-heading="ATMServices"
-				data-title="CashWithdrawal"
-				/><label for="cash_withdrawl">Cash Withdrawal</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="cash_deposits"
-				id="cash_deposits"
-				onclick="submitFilter()"
-				data-category="atm"
-				data-heading="ATMServices"
-				data-title="CashDeposits"
-				/><label for="cash_deposits">Cash Deposits</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="pin_change" id="pin_change" data-category="atm" data-heading="ATMServices" data-title="PINChange"/><label
-				for="pin_change"
-				>PIN Change</label
-				>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input
-				type="checkbox"
-				name="cheque_deposits"
-				id="cheque_deposits"
-				onclick="submitFilter()"
-				data-category="atm"
-				data-heading="ATMServices"
-				data-title="ChequeDeposits"
-				/><label for="cheque_deposits">Cheque Deposits</label>
-			</div>
-			<div class="flex items-center gap-x-2">
-				<input type="checkbox" name="balance" id="balance" onclick="submitFilter()" data-category="atm" data-heading="ATMServices" data-title="Balance"/><label
-				for="balance"
-				>Balance</label
-				>
-			</div>
-			</div>
-		</div>
-		</div>
-	</div>
+    <div id="atm-filters">
+      <h3 class="font-medium mt-4">ATM Filters</h3>
+      <div class="lg:grid grid-cols-2 mt-2">
+        <div>
+          <h4 class="font-medium">Accessibility</h4>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="wheelchair_access_atm"
+              id="wheelchair_access_atm"
+              onclick="submitFilter()"
+              data-category="atm"
+              data-heading="Accessibility"
+              data-title="WheelchairAccess"
+            /><label for="wheelchair_access_atm">Wheelchair Access</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="audio_cash_machine"
+              id="audio_cash_machine"
+              onclick="submitFilter()"
+              data-category="atm"
+              data-heading="Accessibility"
+              data-title="AudioCashMachine"
+            /><label for="audio_cash_machine">Audio Cash Machine</label>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-medium mt-4 lg:mt-0">Services</h4>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="cash_withdrawl"
+              id="cash_withdrawl"
+              onclick="submitFilter()"
+              data-category="atm"
+              data-heading="ATMServices"
+              data-title="CashWithdrawal"
+            /><label for="cash_withdrawl">Cash Withdrawal</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="cash_deposits"
+              id="cash_deposits"
+              onclick="submitFilter()"
+              data-category="atm"
+              data-heading="ATMServices"
+              data-title="CashDeposits"
+            /><label for="cash_deposits">Cash Deposits</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="pin_change"
+              id="pin_change"
+              data-category="atm"
+              data-heading="ATMServices"
+              data-title="PINChange"
+            /><label for="pin_change">PIN Change</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="cheque_deposits"
+              id="cheque_deposits"
+              onclick="submitFilter()"
+              data-category="atm"
+              data-heading="ATMServices"
+              data-title="ChequeDeposits"
+            /><label for="cheque_deposits">Cheque Deposits</label>
+          </div>
+          <div class="flex items-center gap-x-2">
+            <input
+              type="checkbox"
+              name="balance"
+              id="balance"
+              onclick="submitFilter()"
+              data-category="atm"
+              data-heading="ATMServices"
+              data-title="Balance"
+            /><label for="balance">Balance</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-	<div id="list-view" class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl py-4 z-10 bg-white overflow-y-auto hidden">
-		<div class="flex pb-2 border-b items-center px-8">
-			<h2 class="font-semibold text-xl">Branches & ATMs</h2>
-			<div class="text-4xl cursor-pointer w-max ml-auto justify-end text-gray-500 hover:text-gray-800" onclick="toggleListView()">&times;</div>
-		</div>
-		<div id="list-contents">
+  <div
+    id="list-view"
+    class="absolute w-full lg:!w-2/3 2xl:!w-1/3 shadow-2xl py-4 z-10 bg-white overflow-y-auto hidden"
+  >
+    <div class="flex pb-2 border-b items-center px-8">
+      <h2 class="font-semibold text-xl">Branches & ATMs</h2>
+      <div
+        class="text-4xl cursor-pointer w-max ml-auto justify-end text-gray-500 hover:text-gray-800"
+        onclick="toggleListView()"
+      >
+        &times;
+      </div>
+    </div>
+    <div id="list-contents"></div>
+  </div>
 
-		</div>
-	</div>
+  <div id="map" style="z-index: 1">
+    <div id="map-loader" class="grid justify-center mt-24 lg:mt-12">
+      <h4 class="font-medium">Please allow location services...</h4>
+      <div class="loader mx-auto mt-4"></div>
+    </div>
+  </div>
 
-	<div id="map" style="z-index: 1">
-		<div id="map-loader" class="grid justify-center mt-24 lg:mt-12">
-		<h4 class="font-medium">Please allow location services...</h4>
-		<div class="loader mx-auto mt-4"></div>
-		</div>
-	</div>
+  <script>
+    var map;
+    var markers = [];
 
-	<script>
-		var map;
-		var markers = [];
+    function removeMarkers() {
+      markers.forEach(function (marker) {
+        map.removeLayer(marker);
+      });
+    }
 
-		function removeMarkers(){
-			markers.forEach(function (marker) {
-				map.removeLayer(marker);
-			});
-		}
+    function initializeMap(latitude, longitude) {
+      try {
+        // Initialize map
+        map = L.map("map").setView([latitude, longitude], 15);
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution:
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(map);
 
-		function initializeMap(latitude, longitude) {
-			try {
-				// Initialize map
-				map = L.map("map").setView([latitude, longitude], 15);
-				L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-					maxZoom: 19,
-					attribution:
-					'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-				}).addTo(map);
+        // hide loading screen
+        var mapLoader = document.getElementById("map-loader");
+        mapLoader.classList.add("hidden");
+        mapLoader.classList.remove("grid");
 
-				// hide loading screen
-				var mapLoader = document.getElementById("map-loader");
-				mapLoader.classList.add("hidden");
-				mapLoader.classList.remove("grid");
+        submitFilter();
+      } catch (error) {
+        // Display error if unable to load map
+        var mapElement = document.getElementById("map");
+        mapElement.innerHTML = "<p>There was an error loading the map</p>";
+      }
+    }
 
-				submitFilter();
-			} catch (error) {
-			// Display error if unable to load map
-			var mapElement = document.getElementById("map");
-			mapElement.innerHTML = "<p>There was an error loading the map</p>";
-			}
-		}
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        initializeMap(position.coords.latitude, position.coords.longitude);
+      });
+    }
 
-		if ("geolocation" in navigator) {
-			navigator.geolocation.getCurrentPosition((position) => {
-				initializeMap(position.coords.latitude, position.coords.longitude);
-			})
-		}
+    function submitFilter() {
+      const filterData = {};
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-		function submitFilter(){
-			const filterData = {};
-			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      listContents = document.getElementById("list-contents");
+      listContents.innerHTML = "";
 
-			listContents = document.getElementById('list-contents');
-			listContents.innerHTML = '';
+      removeMarkers();
 
-			removeMarkers();
-			
-			branchOpts = document.querySelectorAll('input[data-category="branch"]');
-			atmOpts = document.querySelectorAll('input[data-category="atm"]');
+      branchOpts = document.querySelectorAll('input[data-category="branch"]');
+      atmOpts = document.querySelectorAll('input[data-category="atm"]');
 
-			checkboxes.forEach(checkbox => {
-				if (checkbox.checked){
-					branchOpts.forEach(opt => {
-						if (checkbox.id == opt.id){
-							if (!filterData[opt.getAttribute('data-heading')]){
-								filterData[opt.getAttribute('data-heading')] = [];
-							}
-							filterData[opt.getAttribute('data-heading')].push(opt.getAttribute('data-title'));
-						}
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+          branchOpts.forEach((opt) => {
+            if (checkbox.id == opt.id) {
+              if (!filterData[opt.getAttribute("data-heading")]) {
+                filterData[opt.getAttribute("data-heading")] = [];
+              }
+              filterData[opt.getAttribute("data-heading")].push(
+                opt.getAttribute("data-title")
+              );
+            }
+          });
 
-					})
+          atmOpts.forEach((opt) => {
+            if (checkbox.id == opt.id) {
+              if (!filterData[opt.getAttribute("data-heading")]) {
+                filterData[opt.getAttribute("data-heading")] = [];
+              }
+              filterData[opt.getAttribute("data-heading")].push(
+                opt.getAttribute("data-title")
+              );
+            }
+          });
+        }
+      });
 
-					atmOpts.forEach(opt => {
-						if (checkbox.id == opt.id){
-							if (!filterData[opt.getAttribute('data-heading')]){
-								filterData[opt.getAttribute('data-heading')] = [];
-							}
-							filterData[opt.getAttribute('data-heading')].push(opt.getAttribute('data-title'));
-						}
-					})
-				}
-			})
+      filterData["Longitude"] = -2.971743;
+      filterData["Latitude"] = 56.46159;
+      filterData["Radius"] = 5000;
 
-			filterData["Longitude"] = -2.971743;
-			filterData["Latitude"] = 56.461590;
-			filterData["Radius"] = 5000;
+      console.log(filterData);
 
-			console.log(filterData);
+      filterBranches(filterData);
+    }
 
-			filterBranches(filterData);
-		}
+    async function filterBranches(filterData) {
+      var request = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(filterData),
+      };
 
-		async function filterBranches(filterData){
-			var request = {
-				method: "POST",
-				headers: {
-				"Content-Type": "application/json",
-				},
-				body: JSON.stringify(filterData),
-			};
+      var greyIcon = new L.Icon({
+        iconUrl:
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
 
-			var greyIcon = new L.Icon({
-				iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-				shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-				iconSize: [25, 41],
-				iconAnchor: [12, 41],
-				popupAnchor: [1, -34],
-				shadowSize: [41, 41]
-			});
+      try {
+        for (i = 0; i < 2; i++) {
+          if (i == 0) {
+            reqType = "branches";
+          } else {
+            reqType = "atms";
+          }
 
-			try {
-				for (i = 0; i < 2; i++){
-					if (i == 0){
-						reqType = 'branches';
-					} else {
-						reqType = 'atms';
-					}
+          const response = await fetch(
+            "https://backend-dot-wombo-412213.nw.r.appspot.com/" +
+              reqType +
+              "/filter",
+            request
+          );
+          const data = await response.json();
+          console.log(data); // Handle the response data as needed
+          var listViewContainer = document.getElementById("list-contents");
 
-				const response = await fetch("http://localhost:3000/"+reqType+"/filter", request);
-				const data = await response.json();
-				console.log(data); // Handle the response data as needed
-				var listViewContainer = document.getElementById("list-contents");
+          data.forEach((branch) => {
+            var listItem = document.createElement("div");
+            listItem.classList.add(
+              "pt-6",
+              "border-b",
+              "pb-6",
+              "relative",
+              "px-8",
+              "list-item"
+            );
+            listItem.setAttribute("data-marker", branch.name);
 
-				data.forEach(branch => {
+            var branchDetails = document.createElement("div");
+            branchDetails.classList.add("lg:grid", "grid-cols-2");
 
-					var listItem = document.createElement("div");
-					listItem.classList.add("pt-6", "border-b", "pb-6", "relative", "px-8", "list-item");
-					listItem.setAttribute('data-marker', branch.name);
+            var infoColumn = document.createElement("div");
+            var detailsColumn = document.createElement("div");
 
-					var branchDetails = document.createElement("div");
-					branchDetails.classList.add("lg:grid", "grid-cols-2");
+            detailsColumn.classList.add(
+              "lg:text-right",
+              "lg:h-full",
+              "grid",
+              "mt-6",
+              "lg:mt-0"
+            );
 
-					var infoColumn = document.createElement("div");
-					var detailsColumn = document.createElement("div");
+            // Populate branch details
+            var branchName = document.createElement("h4");
+            branchName.classList.add("font-medium", "text-lg");
+            branchName.textContent = branch.name;
 
-					detailsColumn.classList.add('lg:text-right', 'lg:h-full', 'grid', 'mt-6', 'lg:mt-0')
+            var branchAddress = document.createElement("h5");
+            branchAddress.classList.add("text-sm");
+            branchAddress.textContent = branch.address;
 
-					// Populate branch details
-					var branchName = document.createElement("h4");
-					branchName.classList.add("font-medium", "text-lg");
-					branchName.textContent = branch.name;
+            var accessibilityList = document.createElement("ul");
+            accessibilityList.classList.add("text-sm", "mt-4");
 
-					var branchAddress = document.createElement("h5");
-					branchAddress.classList.add("text-sm");
-					branchAddress.textContent = branch.address;
+            if (branch.accessibilityFeatures) {
+              branch.accessibilityFeatures.split(", ").forEach((feature) => {
+                var listItem = document.createElement("li");
+                listItem.innerHTML =
+                  '<i class="fa-regular fa-circle-check text-green-500 mr-1"></i>' +
+                  feature;
+                accessibilityList.appendChild(listItem);
+              });
+            }
 
-					var accessibilityList = document.createElement("ul");
-					accessibilityList.classList.add("text-sm", "mt-4");
+            // Populate additional details based on branch or ATM
+            if (branch.type === "ATM") {
+              // Add ATM-specific details
+              var atmServices = document.createElement("div");
+              atmServices.classList.add(
+                "flex",
+                "items-center",
+                "gap-x-2",
+                "justify-end"
+              );
+              var wifiIcon = document.createElement("i");
+              wifiIcon.classList.add(
+                "fa-solid",
+                "fa-wifi",
+                "text-green-500",
+                "mr-1"
+              );
+              var wifiLabel = document.createElement("label");
+              wifiLabel.textContent = "Wi-Fi";
+              atmServices.appendChild(wifiIcon);
+              atmServices.appendChild(wifiLabel);
 
-					if (branch.accessibilityFeatures){
-						branch.accessibilityFeatures.split(", ").forEach(feature => {
-						var listItem = document.createElement("li");
-						listItem.innerHTML = '<i class="fa-regular fa-circle-check text-green-500 mr-1"></i>' + feature;
-						accessibilityList.appendChild(listItem);
-					});
-				}
+              detailsColumn.appendChild(atmServices);
+            } else {
+              // Add Branch-specific details
+              // You can add additional details based on your data structure
 
-				// Populate additional details based on branch or ATM
-				if (branch.type === 'ATM') {
-					// Add ATM-specific details
-					var atmServices = document.createElement("div");
-					atmServices.classList.add("flex", "items-center", "gap-x-2", "justify-end");
-					var wifiIcon = document.createElement("i");
-					wifiIcon.classList.add("fa-solid", "fa-wifi", "text-green-500", "mr-1");
-					var wifiLabel = document.createElement("label");
-					wifiLabel.textContent = "Wi-Fi";
-					atmServices.appendChild(wifiIcon);
-					atmServices.appendChild(wifiLabel);
+              // Populate opening hours
+              var openingHours = document.createElement("div");
+              openingHours.classList.add(
+                "lg:font-medium",
+                "text-sm",
+                "lg:text-base"
+              );
 
-					detailsColumn.appendChild(atmServices);
-				} else {
-					// Add Branch-specific details
-					// You can add additional details based on your data structure
+              var openHoursText =
+                branch.openingHours || "Opening hours not available";
+              var formattedOpeningHours = openHoursText.replace(/;/g, "<br>");
 
-					// Populate opening hours
-					var openingHours = document.createElement("div");
-					openingHours.classList.add("lg:font-medium", "text-sm", "lg:text-base");
+              // Check if Sunday has the special case 00:00 - 00:00
+              if (formattedOpeningHours.includes("Sunday 00:00 - 00:00")) {
+                // Remove the Sunday entry
+                formattedOpeningHours = formattedOpeningHours.replace(
+                  "Sunday 00:00 - 00:00",
+                  ""
+                );
+              }
+              // Check if Sunday has the special case 00:00 - 00:00
+              if (formattedOpeningHours.includes("Saturday 00:00 - 00:00")) {
+                // Remove the Sunday entry
+                formattedOpeningHours = formattedOpeningHours.replace(
+                  "Saturday 00:00 - 00:00",
+                  ""
+                );
+              }
 
-					var openHoursText = branch.openingHours || "Opening hours not available";
-					var formattedOpeningHours = openHoursText.replace(/;/g, '<br>');
+              openingHours.innerHTML = formattedOpeningHours;
 
-					// Check if Sunday has the special case 00:00 - 00:00
-					if (formattedOpeningHours.includes("Sunday 00:00 - 00:00")) {
-						// Remove the Sunday entry
-						formattedOpeningHours = formattedOpeningHours.replace("Sunday 00:00 - 00:00", "");
-					}
-					// Check if Sunday has the special case 00:00 - 00:00
-					if (formattedOpeningHours.includes("Saturday 00:00 - 00:00")) {
-						// Remove the Sunday entry
-						formattedOpeningHours = formattedOpeningHours.replace("Saturday 00:00 - 00:00", "");
-					}
+              var branchServices = document.createElement("div");
+              branchServices.classList.add("flex", "items-center", "gap-x-2");
+              detailsColumn.appendChild(branchServices);
 
-					openingHours.innerHTML = formattedOpeningHours;
+              var wifi = document.createElement("div");
+              wifi.classList.add("flex", "mt-4", "lg:mt-0");
+              wifi.innerHTML =
+                '<img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access"/><a href="tel:' +
+                branch.phoneNumber +
+                '" class="lg:hidden text-sm ml-auto><i class="fa-solid fa-phone mr-1"></i>' +
+                branch.phoneNumber +
+                "</a>";
 
+              var phone = document.createElement("a");
+              phone.href = "tel:" + branch.phoneNumber;
+              phone.classList.add("mt-auto", "hidden", "lg:block");
+              phone.innerHTML =
+                '<i class="fa-solid fa-phone mr-1"></i>' + branch.phoneNumber;
 
-					var branchServices = document.createElement("div");
-					branchServices.classList.add("flex", "items-center", "gap-x-2");
-					detailsColumn.appendChild(branchServices);
+              // Append the elements to the detailsColumn
+              detailsColumn.appendChild(openingHours);
+              detailsColumn.appendChild(wifi);
+              detailsColumn.appendChild(phone);
+            }
 
-					var wifi = document.createElement('div');
-					wifi.classList.add('flex', 'mt-4', 'lg:mt-0');
-					wifi.innerHTML = '<img src="images/wifi.png" class="h-4 lg:ml-auto lg:mt-4" alt="Wi-Fi Access"/><a href="tel:' + branch.phoneNumber + '" class="lg:hidden text-sm ml-auto><i class="fa-solid fa-phone mr-1"></i>' + branch.phoneNumber + '</a>';
+            // Append created elements to the list view
+            infoColumn.appendChild(branchName);
+            infoColumn.appendChild(branchAddress);
+            infoColumn.appendChild(accessibilityList);
+            branchDetails.appendChild(infoColumn);
+            branchDetails.appendChild(detailsColumn);
+            listItem.appendChild(branchDetails);
+            listViewContainer.appendChild(listItem);
 
-					var phone = document.createElement('a');
-					phone.href = 'tel:' + branch.phoneNumber;
-					phone.classList.add('mt-auto', 'hidden', 'lg:block');
-					phone.innerHTML = '<i class="fa-solid fa-phone mr-1"></i>' + branch.phoneNumber;
+            if (branch.type === "Branch") {
+              detailsColumn.appendChild(openingHours);
+              detailsColumn.appendChild(wifi);
+              detailsColumn.appendChild(phone);
+            }
 
-					// Append the elements to the detailsColumn
-					detailsColumn.appendChild(openingHours);
-					detailsColumn.appendChild(wifi);
-					detailsColumn.appendChild(phone);
-				}
+            var longitude = branch.coordinates.Longitude;
+            var latitude = branch.coordinates.Latitude;
 
-				// Append created elements to the list view
-				infoColumn.appendChild(branchName);
-				infoColumn.appendChild(branchAddress);
-				infoColumn.appendChild(accessibilityList);
-				branchDetails.appendChild(infoColumn);
-				branchDetails.appendChild(detailsColumn);
-				listItem.appendChild(branchDetails);
-				listViewContainer.appendChild(listItem);
+            if (branch.type == "ATM") {
+              if (longitude || latitude != undefined) {
+                var marker = L.marker([latitude, longitude], {
+                  icon: greyIcon,
+                }).addTo(map);
+                markers.push(marker);
+              }
+            } else {
+              if (longitude || latitude != undefined) {
+                var marker = L.marker([latitude, longitude]).addTo(map);
+                markers.push(marker);
+              }
+            }
+            // Create the toMapButton
+            var toMapButton = document.createElement("button");
+            toMapButton.classList.add(
+              "text-black",
+              "w-max",
+              "bg-red-200",
+              "hover:bg-red-300",
+              "focus:ring-4",
+              "focus:outline-none",
+              "focus:ring-red-100",
+              "font-medium",
+              "rounded-lg",
+              "text-sm",
+              "px-4",
+              "py-2",
+              "right-2",
+              "ml-auto",
+              "h-max"
+            );
+            toMapButton.innerHTML = "Open in Google Maps";
+            toMapButton.style.setProperty("height", "max-content", "important");
 
-				if (branch.type === 'Branch'){
-					detailsColumn.appendChild(openingHours);
-					detailsColumn.appendChild(wifi);
-					detailsColumn.appendChild(phone);
-				}
-				
-				var longitude = branch.coordinates.Longitude;
-				var latitude = branch.coordinates.Latitude;
+            // Add a click event listener to open Google Maps with the specific latitude and longitude
+            toMapButton.addEventListener("click", function () {
+              var query; // Initialize query variable
+              if (branch.type === "ATM") {
+                // For ATMs, use only the address
+                query = branch.address;
+              } else {
+                // For branches, use the branch name and address for specificity
+                query = "Santander Branch " + branch.address;
+              }
 
+              var encodedQuery = encodeURIComponent(query); // Encode the query for URL
+              var googleMapsUrl =
+                "https://www.google.com/maps?q=" + encodedQuery;
+              window.open(googleMapsUrl, "_blank");
+            });
+            detailsColumn.appendChild(toMapButton);
 
-				if (branch.type == 'ATM'){
-					if (longitude || latitude != undefined){
-						var marker = L.marker([
-							latitude,
-							longitude
-						], {icon: greyIcon}).addTo(map);
-						markers.push(marker);
-					}
-				} else {
-					if (longitude || latitude != undefined){
-						var marker = L.marker([
-							latitude,
-							longitude
-						]).addTo(map);
-						markers.push(marker);
-					}
-				}
-				// Create the toMapButton
-				var toMapButton = document.createElement('button');
-				toMapButton.classList.add(
-					'text-black',
-					'w-max',
-					'bg-red-200',
-					'hover:bg-red-300',
-					'focus:ring-4',
-					'focus:outline-none',
-					'focus:ring-red-100',
-					'font-medium',
-					'rounded-lg',
-					'text-sm',
-					'px-4',
-					'py-2',
-					'right-2',
-					'ml-auto',
-					'h-max'
-				);
-                    toMapButton.innerHTML = 'Open in Google Maps';
-					toMapButton.style.setProperty('height', 'max-content', 'important')
+            marker.addEventListener("click", function () {
+              listView = document.getElementById("list-view");
+              if (listView.classList.contains("hidden")) {
+                toggleListView();
+              }
 
-                    // Add a click event listener to open Google Maps with the specific latitude and longitude
-                    toMapButton.addEventListener('click', function () {
-                        var query; // Initialize query variable
-                        if (branch.type === 'ATM') {
-                            // For ATMs, use only the address
-                            query = branch.address;
-                        } else {
-                            // For branches, use the branch name and address for specificity
-                            query = "Santander Branch " + branch.address;
-                        }
+              var listItems = document.querySelectorAll(".list-item");
 
-                        var encodedQuery = encodeURIComponent(query); // Encode the query for URL
-                        var googleMapsUrl = 'https://www.google.com/maps?q=' + encodedQuery;
-                        window.open(googleMapsUrl, '_blank');
-                    });
-				detailsColumn.appendChild(toMapButton);
+              // Remove the 'selected' class from all list items
+              listItems.forEach((item) => {
+                item.classList.remove("selected");
+              });
 
-				marker.addEventListener('click', function(){
-					listView = document.getElementById("list-view");
-					if (listView.classList.contains("hidden")) {
-					toggleListView();
-					}
+              var listItem = document.querySelector(
+                '[data-marker="' + branch.name + '"]'
+              );
 
-					var listItems = document.querySelectorAll('.list-item');
+              if (listItem) {
+                listItem.classList.add("selected");
+                listItem.scrollIntoView();
+              }
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
 
-					// Remove the 'selected' class from all list items
-					listItems.forEach(item => {
-						item.classList.remove('selected');
-					});
+    function toggleListView() {
+      listView = document.getElementById("list-view");
+      if (listView.classList.contains("hidden")) {
+        listView.classList.remove("hidden");
+        setTimeout(function () {
+          listView.classList.add("visible");
+        }, 10);
+      } else {
+        listView.classList.remove("visible");
+        setTimeout(function () {
+          listView.classList.add("hidden");
+        }, 300);
+      }
+    }
 
-					var listItem = document.querySelector('[data-marker="' + branch.name + '"]');
+    function toggleFilterBox() {
+      filterBox = document.getElementById("filter-box");
 
-					if (listItem){
-					listItem.classList.add('selected');
-					listItem.scrollIntoView();
-					}
-				})
-				})	
-				}
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		}
-
-		function toggleListView() {
-			listView = document.getElementById("list-view");
-			if (listView.classList.contains("hidden")) {
-				listView.classList.remove("hidden");
-				setTimeout(function () {
-				listView.classList.add("visible");
-				}, 10);
-			} else {
-				listView.classList.remove("visible");
-				setTimeout(function () {
-				listView.classList.add("hidden");
-				}, 300);
-			}
-		}
-
-		function toggleFilterBox() {
-			filterBox = document.getElementById("filter-box");
-
-			if (filterBox.classList.contains("hidden")) {
-				filterBox.classList.remove("hidden");
-				setTimeout(function () {
-				filterBox.classList.add("visible");
-				}, 10); // Delay the addition of 'visible' class
-			} else {
-				filterBox.classList.remove("visible");
-				setTimeout(function () {
-				filterBox.classList.add("hidden");
-				}, 300); // Delay the addition of 'hidden' class to allow the animation to complete
-			}
-		}
-	
-	</script>
-	</body>
+      if (filterBox.classList.contains("hidden")) {
+        filterBox.classList.remove("hidden");
+        setTimeout(function () {
+          filterBox.classList.add("visible");
+        }, 10); // Delay the addition of 'visible' class
+      } else {
+        filterBox.classList.remove("visible");
+        setTimeout(function () {
+          filterBox.classList.add("hidden");
+        }, 300); // Delay the addition of 'hidden' class to allow the animation to complete
+      }
+    }
+  </script>
+</body>

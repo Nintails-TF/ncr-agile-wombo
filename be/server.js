@@ -4,10 +4,12 @@ const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "..", "fe")));
 
 // Use the routes defined in routes.js
 app.use("/", routes);
