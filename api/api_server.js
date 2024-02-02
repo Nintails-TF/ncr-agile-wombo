@@ -7,6 +7,17 @@ const branchRoutes = require('./branchRoutes');
 const app = express();
 const cors = require('cors');
 const swaggerDocument = require('./swagger.json');
+const rateLimit = require('express-rate-limit');
+
+// Rate Limiting Middleware
+const apiLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 1 minutes
+    max: 1000, // limit each IP to 1000 requests per windowMs
+    message: 'Too many requests from this IP, please try again after a delay.'
+});
+
+// Apply to all requests
+app.use(apiLimiter);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
