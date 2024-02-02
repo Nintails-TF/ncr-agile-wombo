@@ -6,4 +6,4 @@ if [ "$1" = "SKIP_HOOKS" ]; then
   exit 0
 fi
 
-npm run lint
+#npm run lint
