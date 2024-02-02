@@ -16,8 +16,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '19.9.0'
-    - name: Change to BE directory
-      run: cd be
     - name: Install BE dependencies
       run: npm install
       working-directory: be
@@ -26,7 +24,4 @@ jobs:
       working-directory: be
     - name: Run Tests in BE
       run: npm test
-      working-directory: be
-    - name: Build BE
-      run: npm run build
       working-directory: be

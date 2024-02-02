@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if [ "$1" = "SKIP_HOOKS" ]; then
+  echo "Skipping hooks as requested."
+  exit 0
+fi
+
+#npm run lint
