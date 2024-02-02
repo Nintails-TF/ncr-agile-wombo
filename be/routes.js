@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { fetchFromAPI, formatDataForDisplay } = require("./utils");
-const { getCachedData, setCachedData, withCache } = require('./cacheUtil');
-
-
 
 const axios = require("axios");
 const bodyParser = require("body-parser");
@@ -30,28 +27,29 @@ router.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// backend endpoint for getting branches from API
 router.get("/branches", async (req, res) => {
-    try {
-        const requestData = { params: req.query };
-        const data = await withCache(fetchFromAPI, "branches", requestData, 'GET');
-        res.json(data);
-    } catch (error) {
-        res.status(500).send("Error processing request");
-    }
+  try {
+    // fetching branch data from the API and returning as JSON
+    const data = await fetchFromAPI("branches", req.query);
+    res.json(data);
+  } catch (error) {
+    // error handling for fetch operations
+    res.status(500).send("Error processing request");
+  }
 });
-
 
 // backend endpoint for getting ATMs from API
 router.get("/atms", async (req, res) => {
-    try {
-        const requestData = { params: req.query };
-        const data = await withCache(fetchFromAPI, "atms", requestData, 'GET');
-        res.json(data);
-    } catch (error) {
-        res.status(500).send("Error processing request");
-    }
+  try {
+    // fetching ATM data from the API and returning as JSON
+    const data = await fetchFromAPI("atms", req.query);
+    res.json(data);
+  } catch (error) {
+    // error handling for fetch operations
+    res.status(500).send("Error processing request");
+  }
 });
-
 
 // endpoint to get formatted data for list view
 router.get("/list-view-data", (req, res) => {
@@ -78,108 +76,64 @@ router.get("/list-view-data", (req, res) => {
     res.json(locationData);
 });*/
 
-// Function to create filter configuration for Axios
-function createFilterConfig(apiEndpoint, filterCriteria) {
-    return {
-        method: "post",
-        url: `${process.env.API_BASE_URL || 'https://wombo-412213.nw.r.appspot.com/api/'}${apiEndpoint}`,
-        data: filterCriteria,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-}
-
 router.post("/atms/filter", async (req, res) => {
-    try {
-        const atmFilterCriteria = {
-            Accessibility: req.body.Accessibility,
-            ATMServices: req.body.ATMServices,
-            Access24HoursIndicator: req.body.Access24HoursIndicator,
-            Latitude: req.body.Latitude,
-            Longitude: req.body.Longitude,
-            Radius: req.body.Radius,
-        };
+  const {
+    Accessibility,
+    ATMServices,
+    Access24HoursIndicator,
+    Latitude,
+    Longitude,
+    Radius,
+  } = req.body;
 
-        const requestData = {
-            body: atmFilterCriteria,
-            headers: { "Content-Type": "application/json" }
-        };
+  const filterATMsConfig = {
+    method: "post",
+    url: "https://wombo-412213.nw.r.appspot.com/api/atms/filter",
+    data: {
+      Accessibility: Accessibility,
+      ATMServices: ATMServices,
+      Access24HoursIndicator: Access24HoursIndicator,
+      Latitude: Latitude,
+      Longitude: Longitude,
+      Radius: Radius,
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
-        const data = await withCache(fetchFromAPI, "atms/filter", requestData, 'POST');
-        res.json(data);
-    } catch (error) {
-        console.error("Error in /atms/filter route:", error.message);
-        res.status(500).send("Error processing request");
-    }
+  const filteredAtms = await axios(filterATMsConfig);
+
+  const formattedAtms = formatDataForDisplay(filteredAtms.data, true);
+
+  res.json(formattedAtms);
 });
-
-
-router.post("/branches/filter", async (req, res) => {
-    try {
-        const branchFilterCriteria = {
-            Accessibility: req.body.Accessibility,
-            ServiceAndFacility: req.body.ServiceAndFacility,
-            Latitude: req.body.Latitude,
-            Longitude: req.body.Longitude,
-            Radius: req.body.Radius,
-        };
-
-        const requestData = {
-            body: branchFilterCriteria,
-            headers: { "Content-Type": "application/json" }
-        };
-
-        const data = await withCache(fetchFromAPI, "branches/filter", requestData, 'POST');
-        res.json(data);
-    } catch (error) {
-        console.error("Error in /branches/filter route:", error.message);
-        res.status(500).send("Error processing request");
-    }
-});
-
-
-
 
 // Route for getting filtered branches
 router.post("/branches/filter", async (req, res) => {
-    try {
-        const branchFilterCriteria = {
-            Accessibility: req.body.Accessibility,
-            ServiceAndFacility: req.body.ServiceAndFacility,
-            Latitude: req.body.Latitude,
-            Longitude: req.body.Longitude,
-            Radius: req.body.Radius,
-        };
+  const { Accessibility, ServiceAndFacility, Latitude, Longitude, Radius } =
+    req.body;
 
-        // Using withCache but wrapping axios call in a function
-        const data = await withCache(async () => {
-            const response = await axios(createFilterConfig("branches/filter", branchFilterCriteria));
-            return response.data;
-        }, "branches/filter", branchFilterCriteria, 'POST');
+  const filterBranchesConfig = {
+    method: "post",
+    url: "https://wombo-412213.nw.r.appspot.com/api/branches/filter",
+    data: {
+      Accessibility: Accessibility,
+      ServiceAndFacility: ServiceAndFacility,
+      Latitude: Latitude,
+      Longitude: Longitude,
+      Radius: Radius,
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
-        res.json(data);
-    } catch (error) {
-        console.error("Error in /branches/filter route:", error.message);
-        res.status(500).send("Error processing request");
-    }
+  const filteredBranches = await axios(filterBranchesConfig);
+
+  const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
+
+  res.json(formattedBranches);
 });
-
-
-router.get("/test-cache", async (req, res) => {
-    const testKey = "testKey";
-    let cachedData = getCachedData(testKey);
-
-    if (cachedData) {
-        console.log(`Cache hit for ${testKey}`);
-        return res.json(cachedData);
-    } else {
-        console.log(`Cache miss for ${testKey}`);
-        const testData = { data: "This is a test" };
-        setCachedData(testKey, testData);
-        return res.json(testData);
-    }
-});
-
 
 module.exports = router;

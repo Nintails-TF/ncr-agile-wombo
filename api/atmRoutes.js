@@ -24,8 +24,6 @@ router.get("/api/atms", async (req, res) => {
 
 router.post("/api/atms/filter", async (req, res) => {
   try {
-
-
     const atms = await db
       .collection("ATMs")
       .find({
