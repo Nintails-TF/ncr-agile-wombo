@@ -107,43 +107,13 @@ router.post("/atms/filter", async (req, res) => {
         };
 
         const filteredAtms = await axios(filterATMsConfig);
-
         const formattedAtms = formatDataForDisplay(filteredAtms.data, true);
-
         res.json(formattedAtms);
-
     } catch (error) {
         console.error("Error in /atms/filter route:", error.message);
         res.status(500).send("Error processing request");
     }
 });
-
-
-router.post("/branches/filter", async (req, res) => {
-    try {
-        const branchFilterCriteria = {
-            Accessibility: req.body.Accessibility,
-            ServiceAndFacility: req.body.ServiceAndFacility,
-            Latitude: req.body.Latitude,
-            Longitude: req.body.Longitude,
-            Radius: req.body.Radius,
-        };
-
-        const requestData = {
-            body: branchFilterCriteria,
-            headers: { "Content-Type": "application/json" }
-        };
-
-        const data = await withCache(fetchFromAPI, "branches/filter", requestData, 'POST');
-        res.json(data);
-    } catch (error) {
-        console.error("Error in /branches/filter route:", error.message);
-        res.status(500).send("Error processing request");
-    }
-});
-
-
-
 
 // Route for getting filtered branches
 router.post("/branches/filter", async (req, res) => {
@@ -162,11 +132,13 @@ router.post("/branches/filter", async (req, res) => {
             return response.data;
         }, "branches/filter", branchFilterCriteria, 'POST');
 
-  const filteredBranches = await axios(filterBranchesConfig);
-
-  const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
-
-  res.json(formattedBranches);
+        const filteredBranches = await axios(filterBranchesConfig);
+        const formattedBranches = formatDataForDisplay(filteredBranches.data, false);
+        res.json(formattedBranches);
+    } catch (error) {
+        console.error("Error in /branches/filter route:", error.message);
+        res.status(500).send("Error processing request");
+    }
 });
 
 
